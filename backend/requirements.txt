@@ -6,3 +6,5 @@ redis>=5.0.0
 google-genai>=0.1.0
 pydantic-settings>=2.0.0
 python-dotenv>=1.0.0
+sdv>=1.38.0
+tabulate>=0.10.0

@@ -137,6 +137,7 @@ Thumbs.db
 # Project-specific ignores
 .env
 data/
+models/
 node_modules/
 dist/
 .idea/
