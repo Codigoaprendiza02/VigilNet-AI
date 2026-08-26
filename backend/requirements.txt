@@ -8,3 +8,4 @@ pydantic-settings>=2.0.0
 python-dotenv>=1.0.0
 sdv>=1.38.0
 tabulate>=0.10.0
+xgboost>=3.4.1

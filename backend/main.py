@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.db.mongodb import connect_to_mongo, close_mongo_connection
 from app.db.redis_client import connect_to_redis, close_redis_connection
-from app.routers import health
+from app.routers import health, score
 
 # Setup logging
 logging.basicConfig(
@@ -58,6 +58,7 @@ app.add_middleware(
 
 # Include Routers
 app.include_router(health.router)
+app.include_router(score.router)
 
 @app.get("/")
 async def root():
