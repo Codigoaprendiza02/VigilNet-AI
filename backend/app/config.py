@@ -3,6 +3,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     GEMINI_API_KEY: str = ""
+    GEMINI_FLASH_MODEL: str = "gemini-3.6-flash"
+    GEMINI_PRO_MODEL: str = "gemini-2.5-pro"
     MONGODB_URI: str = ""
     MONGODB_DB_NAME: str = "vigilnet"
     REDIS_URL: str = "redis://localhost:6379"
