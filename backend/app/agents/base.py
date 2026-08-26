@@ -34,7 +34,7 @@ class BaseAgent:
             logger.warning("GEMINI_API_KEY is not set. Gemini API calls will fail.")
             self.client = None
         else:
-            self.client = genai.Client()
+            self.client = genai.Client(api_key=settings.GEMINI_API_KEY)
             
         self._synthesizer_cache = None
 
