@@ -116,3 +116,39 @@ class CampaignOrchestrator:
 
         round_doc.pop("_id", None)
         return round_doc, executed_events
+
+    def generate_evasion_brief(self, round_doc: Dict[str, Any], executed_events: List[Dict[str, Any]]) -> str:
+        """
+        Formulates a natural language evasion brief from the results of a campaign round,
+        detailing which steps were blocked, the scores, and categories.
+        """
+        brief = (
+            f"Campaign Evasion Feedback for Round {round_doc['round_id']}:\n"
+            f"Result summary: Out of {round_doc['total_steps']} steps, {round_doc['blocked_steps']} steps were BLOCKED by the detector.\n"
+            f"Overall Evasion Rate: {round_doc['evasion_rate'] * 100:.2f}%\n\n"
+            "Below is the transaction-by-transaction breakdown:\n"
+        )
+        
+        for ev in executed_events:
+            det = ev.get("detection_result", {})
+            step_num = ev["payload"].get("step_number")
+            tx_type = ev["payload"].get("type")
+            amount = ev["amount"]
+            category = ev["merchant_category"]
+            score = det.get("fraud_probability", 0.0)
+            action = str(det.get("action")).upper()
+            rationale = ev["payload"].get("rationale", "")
+            
+            brief += (
+                f"- Step {step_num}: {tx_type} of ${amount:.2f} at {category} -> DECISION: {action} (Detector Score: {score * 100:.2f}%)\n"
+                f"  Rationale used: \"{rationale}\"\n"
+            )
+            
+        brief += (
+            "\nADAPTATION DIRECTIVE FOR THE NEXT ROUND:\n"
+            "- Modify your transaction variables (reduce amounts, change categories, adjust spacing) "
+            "for steps that were BLOCKED so they mimic normal consumer baseline transactions.\n"
+            "- Double down on strategies that successfully evaded detection (ALLOWED steps)."
+        )
+        
+        return brief
