@@ -3,12 +3,16 @@ from typing import Dict, Any, Optional
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 from app.orchestrator.runner import CampaignOrchestrator
-from app.agents.card_tester import CardTesterAgent
+from app.agents import get_agent
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/orchestrator", tags=["orchestrator"])
 
 class RunRoundRequest(BaseModel):
+    persona: Optional[str] = Field(
+        default="card_tester",
+        description="Name of the Red Team persona to simulate (e.g. card_tester, synthetic_identity, structuring, phishing, fake_invoice)."
+    )
     objective: Optional[str] = Field(
         default="Validate active credit/debit card status with small-value checks up to a target balance of $500.",
         description="The fraud campaign objective."
@@ -29,8 +33,8 @@ async def trigger_campaign_round(request: Optional[RunRoundRequest] = None):
 
     logger.info("[Orchestrator API] Received trigger request for new round...")
     try:
-        # Instantiate agent and orchestrator
-        agent = CardTesterAgent()
+        # Instantiate agent dynamically and orchestrator
+        agent = get_agent(request.persona)
         orchestrator = CampaignOrchestrator()
 
         # Run the round
@@ -66,6 +70,10 @@ async def trigger_campaign_round(request: Optional[RunRoundRequest] = None):
 
 
 class ChallengeRequest(BaseModel):
+    persona: Optional[str] = Field(
+        default="card_tester",
+        description="Name of the Red Team persona to simulate (e.g. card_tester, synthetic_identity, structuring, phishing, fake_invoice)."
+    )
     num_rounds: Optional[int] = Field(
         default=3,
         description="The number of adaptive progression rounds to simulate."
@@ -90,7 +98,7 @@ async def trigger_challenge_loop(request: Optional[ChallengeRequest] = None):
 
     logger.info(f"[Orchestrator API] Triggering adaptive challenge loop for {request.num_rounds} rounds...")
     try:
-        agent = CardTesterAgent()
+        agent = get_agent(request.persona)
         orchestrator = CampaignOrchestrator()
         
         rounds_history = []

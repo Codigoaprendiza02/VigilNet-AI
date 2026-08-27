@@ -35,7 +35,8 @@ def extract_features(event: Dict[str, Any]) -> Dict[str, float]:
             return event[key]
         return payload.get(key, default)
 
-    amount = float(get_val("amount", 0.0))
+    # Support both amount (PaySim) and TransactionAmt (IEEE-CIS)
+    amount = float(get_val("amount", get_val("TransactionAmt", 0.0)))
     oldbalance_org = float(get_val("oldbalanceOrg", 0.0))
     newbalance_orig = float(get_val("newbalanceOrig", 0.0))
     oldbalance_dest = float(get_val("oldbalanceDest", 0.0))

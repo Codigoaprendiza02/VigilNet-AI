@@ -78,30 +78,48 @@ class BaseAgent:
             for idx, brief in enumerate(self.evasion_briefs, 1):
                 prompt += f"Directive {idx}: {brief}\n"
                 
-        try:
-            logger.info(f"Generating campaign plan using model: {settings.GEMINI_FLASH_MODEL}")
-            response = self.client.models.generate_content(
-                model=settings.GEMINI_FLASH_MODEL,
-                contents=prompt,
-                config=types.GenerateContentConfig(
-                    response_mime_type="application/json",
-                    response_schema=CampaignPlan,
-                    system_instruction=self.system_instruction,
-                    temperature=0.7
+        import time
+        max_attempts = 4
+        base_delay = 15
+        
+        for attempt in range(1, max_attempts + 1):
+            try:
+                logger.info(f"Generating campaign plan using model: {settings.GEMINI_FLASH_MODEL} (Attempt {attempt}/{max_attempts})")
+                response = self.client.models.generate_content(
+                    model=settings.GEMINI_FLASH_MODEL,
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
+                        response_mime_type="application/json",
+                        response_schema=CampaignPlan,
+                        system_instruction=self.system_instruction,
+                        temperature=0.7
+                    )
                 )
-            )
-            
-            # The google-genai library returns the parsed Pydantic object in response.parsed
-            plan_data = response.parsed
-            if not plan_data:
-                # Fallback if parsed is empty but text exists
-                plan_data = CampaignPlan.model_validate_json(response.text)
                 
-            return plan_data
-            
-        except Exception as e:
-            logger.error(f"Error during Gemini planning call: {e}")
-            raise e
+                # The google-genai library returns the parsed Pydantic object in response.parsed
+                plan_data = response.parsed
+                if not plan_data:
+                    # Fallback if parsed is empty but text exists
+                    plan_data = CampaignPlan.model_validate_json(response.text)
+                    
+                return plan_data
+                
+            except Exception as e:
+                err_str = str(e)
+                logger.warning(f"Attempt {attempt} failed: {err_str}")
+                if attempt == max_attempts:
+                    logger.error(f"Error during Gemini planning call after {max_attempts} attempts: {e}")
+                    raise e
+                
+                # Check for rate limit error (429 / Resource Exhausted)
+                is_rate_limit = any(term in err_str.lower() for term in ["429", "resource_exhausted", "quota", "rate limit"])
+                delay = base_delay * attempt
+                if is_rate_limit:
+                    delay += 10  # Add safety margin
+                    logger.info(f"Detected Gemini API rate limit/quota error. Retrying in {delay}s...")
+                else:
+                    logger.info(f"Transient error encountered. Retrying in {delay}s...")
+                time.sleep(delay)
 
     async def act(self, step_plan: CampaignStep, round_id: str, feedback: Optional[str] = None) -> Dict[str, Any]:
         """Abstract act method to be implemented by child classes."""
