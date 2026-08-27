@@ -5,14 +5,14 @@ from datetime import datetime
 from typing import Dict, Any, List, Tuple, Optional
 from app.db.mongodb import get_database
 from app.detectors.features import extract_features, FEATURE_COLS
-from app.routers.score import detector_manager
+from app.detectors.ensemble import EnsembleScorer
 from app.agents.base import BaseAgent
 
 logger = logging.getLogger(__name__)
 
 class CampaignOrchestrator:
     def __init__(self):
-        pass
+        self.ensemble = EnsembleScorer()
 
     async def run_round(
         self, 
@@ -51,15 +51,14 @@ class CampaignOrchestrator:
             prob_fraud = 0.0
             is_flagged = False
             action = "allowed"
+            layers_scores = {}
             
             try:
-                features = extract_features(event)
-                df = pd.DataFrame([features])[FEATURE_COLS]
-                
-                model = detector_manager.get_model()
-                prob_fraud = float(model.predict_proba(df)[0][1])
-                is_flagged = prob_fraud >= 0.5
+                res = await self.ensemble.score_transaction(event, round_id=round_id)
+                prob_fraud = res["fraud_probability"]
+                is_flagged = res["is_flagged"]
                 action = "blocked" if is_flagged else "allowed"
+                layers_scores = res["layers"]
                 
                 logger.info(f"[Orchestrator] Step {step.step_number} score: {prob_fraud:.4f} -> Action: {action.upper()}")
             except FileNotFoundError as fnf:
@@ -80,6 +79,7 @@ class CampaignOrchestrator:
                 "fraud_probability": prob_fraud,
                 "is_flagged": is_flagged,
                 "action": action,
+                "layers": layers_scores,
                 "scored_at": datetime.utcnow()
             }
             
