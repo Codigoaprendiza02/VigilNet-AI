@@ -9,7 +9,12 @@ import {
   Play, 
   AlertTriangle, 
   CheckCircle2, 
-  RefreshCw 
+  RefreshCw,
+  ArrowRight,
+  Cpu,
+  FileText,
+  Mail,
+  Users
 } from 'lucide-react';
 import {
   LineChart,
@@ -205,47 +210,77 @@ export default function App() {
     {
       id: "card_tester",
       name: "Card Testing Attack",
+      icon: <Shield size={18} style={{ color: 'var(--primary)' }} />,
       generator: "IEEE-CIS / PaySim Hybrid",
       engineered: "TransactionAmt, balanceOrig/Dest error ratio, card identity mapping",
       defense: "Sequence Layer (LSTM) & Tabular (XGBoost)",
+      layers: ["Tabular", "Sequence"],
       desc: "Simulates cards checking validity via successive small transactions. Caught by temporal sequence analysis.",
-      active: true
+      mechanics: [
+        "Adversary compiles targeted debit/credit card accounts.",
+        "Executes rapid successive low-value ($1.00 - $5.00) authorization checks.",
+        "LSTM checks timing spacing anomalies; XGBoost evaluates AMT outliers."
+      ]
     },
     {
       id: "synthetic_identity",
       name: "Synthetic Identity Fraud",
+      icon: <Users size={18} style={{ color: 'var(--primary)' }} />,
       generator: "IEEE-CIS statistical model",
       engineered: "addr1, addr2, card1-card6 aliases, D1-D15 offset features",
       defense: "Tabular (XGBoost) & Graph (GCN)",
+      layers: ["Tabular", "Graph"],
       desc: "Red Team builds synthetic profiles and makes applications. Tabular signals identify anomaly correlations.",
-      active: true
+      mechanics: [
+        "Adversary builds false identity profiles using real SSNs and fake addresses.",
+        "Opens credit accounts, establishing small initial histories to build trust.",
+        "Evaluated via tabular model correlations and GCN relationship networks."
+      ]
     },
     {
       id: "structuring",
-      name: "Money Laundering Structuring",
+      name: "Structuring / Smurfing",
+      icon: <Cpu size={18} style={{ color: 'var(--primary)' }} />,
       generator: "PaySim transactional flow",
       engineered: "Splitted amounts, sub-threshold CTR offsets, account out-degree",
       defense: "Graph Layer (GCN) & Tabular (XGBoost)",
-      desc: "Breaks a large sum into smurfing nodes to bypass thresholds. Detected via graph network density changes.",
-      active: true
+      layers: ["Tabular", "Graph"],
+      desc: "Breaks a large sum into smurfing nodes to bypass thresholds. Detected via GCN node propagation.",
+      mechanics: [
+        "Adversary splits a large transfer into multiple sub-threshold transactions.",
+        "Routes funds through smurf sender nodes to a target mule account hub.",
+        "GCN flags nodes with anomalous out-degree; Tabular flags sub-threshold transactions."
+      ]
     },
     {
       id: "phishing",
       name: "BEC Spear-Phishing",
+      icon: <Mail size={18} style={{ color: 'var(--primary)' }} />,
       generator: "Gemini Text Embeddings",
       engineered: "Business context, urgency phrasing, payment routing command alerts",
       defense: "Text Layer (Gemini Prompted)",
+      layers: ["Text"],
       desc: "Emails sent to C-Suite asking to wire money to routing updates. Caught by the prompted Text defense layer.",
-      active: true
+      mechanics: [
+        "Adversary spear-phishes accounting department pretending to be CEO/vendor.",
+        "Demands urgent wire transfer for acquisition retainer or billing renewal.",
+        "Prompted Gemini-3.5-flash evaluates email text structure for routing modifications."
+      ]
     },
     {
       id: "fake_invoice",
       name: "Supplier Invoice Fraud",
+      icon: <FileText size={18} style={{ color: 'var(--primary)' }} />,
       generator: "Gemini Text Embeddings",
       engineered: "Invoicing terminology, vendor verification matching",
       defense: "Text Layer (Gemini Prompted)",
+      layers: ["Text"],
       desc: "Red Team acts as false suppliers renewing license bills. Checked against text-based LLM classifier.",
-      active: true
+      mechanics: [
+        "Adversary spoof-emails accounts payable department with a duplicate software bill.",
+        "Claims bank details changed and threatens service interruption if unpaid.",
+        "Prompted Gemini evaluates the text rationale and invoice details for BEC indicators."
+      ]
     }
   ];
 
@@ -325,32 +360,102 @@ export default function App() {
                 <p className="panel-subtitle">Overview of simulated attack vectors, mathematical models, and the protecting ensemble layers.</p>
               </div>
 
-              {taxonomyItems.map((item) => (
-                <div key={item.id} className="card hoverable">
-                  <div className="card-header-row">
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                      <h3 className="card-title">{item.name}</h3>
-                      <span className="card-pill primary">ACTIVE</span>
-                    </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', fontSize: '0.75rem' }}>
-                      <span style={{ color: 'var(--text-muted)' }}>Ensemble Defense</span>
-                      <span style={{ fontWeight: 700, color: 'var(--success)' }}>{item.defense}</span>
-                    </div>
+              {/* Intuitive Loop Flowchart Card */}
+              <div className="loop-flow-card">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--primary)' }}>
+                  <TrendingUp size={16} />
+                  <span style={{ fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    Adversarial Learning Cycle (Feedback Loop)
+                  </span>
+                </div>
+                <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                  VigilNet operates as a closed-loop system. When the Blue Team shields block a Red Team persona's attack campaign, the evasion brief details are compiled to dynamically adapt the next campaign strategy.
+                </p>
+
+                <div className="loop-flow-container">
+                  <div className="loop-flow-node">
+                    <Activity size={18} style={{ color: 'var(--danger)' }} />
+                    <span className="loop-flow-node-title">1. Red Team Agent</span>
+                    <span className="loop-flow-node-desc">Gemini plans campaign step bounds</span>
                   </div>
-                  <p className="card-description">{item.desc}</p>
-                  
-                  <div className="details-row-container">
-                    <div>
-                      <span className="details-block-label">Statistical Generator</span>
-                      <div className="details-block-value">{item.generator}</div>
-                    </div>
-                    <div>
-                      <span className="details-block-label">Engineered Attributes</span>
-                      <div className="details-block-value">{item.engineered}</div>
-                    </div>
+
+                  <div className="arrow-connector">
+                    <ArrowRight size={18} />
+                  </div>
+
+                  <div className="loop-flow-node">
+                    <Cpu size={18} style={{ color: 'var(--secondary)' }} />
+                    <span className="loop-flow-node-title">2. SDV Generator</span>
+                    <span className="loop-flow-node-desc">Projects realistic synthetic data</span>
+                  </div>
+
+                  <div className="arrow-connector">
+                    <ArrowRight size={18} />
+                  </div>
+
+                  <div className="loop-flow-node">
+                    <Shield size={18} style={{ color: 'var(--primary)' }} />
+                    <span className="loop-flow-node-title">3. Ensemble Shield</span>
+                    <span className="loop-flow-node-desc">Evaluates & blocks transactions</span>
+                  </div>
+
+                  <div className="arrow-connector">
+                    <ArrowRight size={18} />
+                  </div>
+
+                  <div className="loop-flow-node">
+                    <RotateCcw size={18} style={{ color: 'var(--success)' }} />
+                    <span className="loop-flow-node-title">4. Adapt & Loop</span>
+                    <span className="loop-flow-node-desc">Miss-agent redirects adversary</span>
                   </div>
                 </div>
-              ))}
+              </div>
+
+              {/* Taxonomy Cards Grid (2-Columns) */}
+              <div className="grid-2-columns">
+                {taxonomyItems.map((item) => (
+                  <div key={item.id} className="card hoverable">
+                    <div className="card-header-row">
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        {item.icon}
+                        <h3 className="card-title">{item.name}</h3>
+                      </div>
+                      <span className="card-pill primary" style={{ fontSize: '8px' }}>ACTIVE</span>
+                    </div>
+
+                    <p className="card-description" style={{ fontSize: '0.8rem' }}>{item.desc}</p>
+
+                    <div>
+                      <span className="details-block-label" style={{ display: 'block', marginBottom: '0.25rem' }}>Core Mechanics</span>
+                      <ul className="mechanics-list">
+                        {item.mechanics.map((step, sIdx) => (
+                          <li key={sIdx}>{step}</li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div style={{ borderTop: '1px solid var(--card-border)', paddingTop: '0.75rem', marginTop: '0.25rem' }}>
+                      <span className="details-block-label">Active Ensemble Shields</span>
+                      <div className="chip-group">
+                        {item.layers.map((layer) => (
+                          <span key={layer} className="defense-chip">{layer} Layer</span>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="details-row-container" style={{ borderTop: '1px solid var(--card-border)', paddingTop: '0.75rem', marginTop: '0.25rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+                      <div>
+                        <span className="details-block-label">Generator Profile</span>
+                        <div className="details-block-value" style={{ fontSize: '0.7rem' }}>{item.generator}</div>
+                      </div>
+                      <div>
+                        <span className="details-block-label">Telemetry Fields</span>
+                        <div className="details-block-value" style={{ fontSize: '0.7rem' }}>{item.engineered}</div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 
