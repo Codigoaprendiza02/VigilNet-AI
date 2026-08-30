@@ -300,23 +300,7 @@ export default function App() {
             <span>Evasion Replay</span>
           </button>
 
-          {/* Connection Host Selector placed inside the sidebar */}
-          <div className="api-connection-selector" style={{ marginTop: '1.5rem', marginBottom: '1rem', width: '100%', display: 'flex', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flex: 1 }}>
-              <Server size={14} style={{ opacity: 0.6 }} />
-              <input 
-                type="text" 
-                value={apiBase} 
-                onChange={(e) => setApiBase(e.target.value)}
-                className="api-input"
-                style={{ width: '90px', fontSize: '0.7rem' }}
-                placeholder="API base"
-              />
-            </div>
-            <div className="connection-badge" style={{ padding: '0.15rem 0.35rem' }}>
-              <span className={`connection-indicator ${isConnected ? 'online' : 'offline'}`}></span>
-            </div>
-          </div>
+
 
           <div className="sidebar-footer">
             <div className="sidebar-footer-row">
