@@ -31,7 +31,7 @@
   
   --sidebar-bg: #e2e8f0;
   --nav-active: rgba(37, 99, 235, 0.08);
-  --console-bg: #0f172a;
+  --console-bg: #ffffff;
 }
 
 /* Global Reset */
@@ -810,4 +810,32 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+}
+
+/* Log Badges inside Console Box */
+.log-badge {
+  font-size: 0.55rem;
+  font-weight: 800;
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  text-transform: uppercase;
+  font-family: var(--font-family);
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+  display: inline-block;
+}
+.log-badge-sys {
+  background-color: var(--primary-glow);
+  color: var(--primary);
+  border: 1px solid var(--primary-hover);
+}
+.log-badge-err {
+  background-color: var(--danger-bg);
+  color: var(--danger);
+  border: 1px solid var(--danger-border);
+}
+.log-badge-info {
+  background-color: var(--nav-active);
+  color: var(--text-secondary);
+  border: 1px solid var(--card-border);
 }

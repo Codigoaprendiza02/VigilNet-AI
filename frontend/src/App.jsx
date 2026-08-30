@@ -469,26 +469,39 @@ export default function App() {
 
               <div className="grid-cols-3">
                 {/* Inputs card */}
-                <div className="card">
-                  <h3 className="card-title" style={{ borderBottom: '1px solid var(--card-border)', paddingBottom: '0.5rem' }}>Campaign Config</h3>
-                  
-                  <div className="form-group">
-                    <label className="form-label">Fraud Persona</label>
+                <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', borderBottom: '1px solid var(--card-border)', paddingBottom: '0.75rem' }}>
+                    <Activity size={18} style={{ color: 'var(--primary)' }} />
+                    <h3 className="card-title" style={{ margin: 0 }}>Campaign Configuration</h3>
+                  </div>
+
+                  <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.4 }}>
+                    Specify the target threat vector constraints. The orchestrator will trigger the corresponding Gemini Red Team agent to generate adaptive transactions.
+                  </p>
+
+                  <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                    <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 700 }}>
+                      <span className="defense-chip" style={{ margin: 0 }}>Step 1</span>
+                      <span>Target Persona Profile</span>
+                    </label>
                     <select 
                       value={selectedPersona}
                       onChange={(e) => setSelectedPersona(e.target.value)}
                       className="form-select"
                     >
-                      <option value="card_tester">Card Tester (Debit/Credit)</option>
-                      <option value="synthetic_identity">Synthetic Identity (IEEE-CIS)</option>
-                      <option value="structuring">Structuring / Smurfing (PaySim)</option>
-                      <option value="phishing">BEC Spear-Phishing (Phishing)</option>
-                      <option value="fake_invoice">Vendor Invoice Spoofing (Fake Invoice)</option>
+                      <option value="card_tester">Card Tester (Tabular/Sequence)</option>
+                      <option value="synthetic_identity">Synthetic Identity (Tabular/Graph)</option>
+                      <option value="structuring">Structuring / Smurfing (Tabular/Graph)</option>
+                      <option value="phishing">BEC Spear-Phishing (Text)</option>
+                      <option value="fake_invoice">Vendor Invoice Spoofing (Text)</option>
                     </select>
                   </div>
 
-                  <div className="form-group">
-                    <label className="form-label">Progression Rounds</label>
+                  <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                    <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 700 }}>
+                      <span className="defense-chip" style={{ margin: 0 }}>Step 2</span>
+                      <span>Progression Rounds</span>
+                    </label>
                     <input 
                       type="number" 
                       min="1" 
@@ -500,23 +513,31 @@ export default function App() {
                     />
                   </div>
 
-                  <div className="form-group">
-                    <label className="form-label">Custom Objective (Optional)</label>
+                  <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                    <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 700 }}>
+                      <span className="defense-chip" style={{ margin: 0 }}>Step 3</span>
+                      <span>Custom Objective (Optional)</span>
+                    </label>
                     <textarea 
                       placeholder={personaDefaultConfigs[selectedPersona].objective}
                       value={customObjective}
                       onChange={(e) => setCustomObjective(e.target.value)}
                       className="form-textarea"
+                      style={{ height: '60px', fontSize: '0.75rem' }}
                     />
                   </div>
 
-                  <div className="form-group">
-                    <label className="form-label">Custom Target Profile (Optional)</label>
+                  <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                    <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 700 }}>
+                      <span className="defense-chip" style={{ margin: 0 }}>Step 4</span>
+                      <span>Target Profile (Optional)</span>
+                    </label>
                     <textarea 
                       placeholder={personaDefaultConfigs[selectedPersona].profile}
                       value={customTargetProfile}
                       onChange={(e) => setCustomTargetProfile(e.target.value)}
                       className="form-textarea"
+                      style={{ height: '60px', fontSize: '0.75rem' }}
                     />
                   </div>
 
@@ -524,6 +545,7 @@ export default function App() {
                     onClick={triggerChallenge}
                     disabled={isSimulating || !isConnected}
                     className="btn-submit"
+                    style={{ marginTop: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
                   >
                     {isSimulating ? (
                       <>
@@ -540,57 +562,90 @@ export default function App() {
                 </div>
 
                 {/* Console card */}
-                <div className="console-box">
-                  <div className="card-header-row" style={{ marginBottom: '0.75rem' }}>
-                    <h3 className="card-title">Simulation Console Logs</h3>
-                    <span className="card-pill primary" style={{ fontFamily: 'monospace' }}>STDOUT</span>
+                <div className="console-box" style={{ backgroundColor: 'var(--console-bg)', border: '1px solid var(--card-border)', display: 'flex', flexDirection: 'column' }}>
+                  <div className="card-header-row" style={{ marginBottom: '0.75rem', borderBottom: '1px solid var(--card-border)', paddingBottom: '0.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <Cpu size={16} style={{ color: 'var(--primary)' }} />
+                      <h3 className="card-title" style={{ margin: 0 }}>Simulation Logs</h3>
+                    </div>
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      {simLogs.length > 0 && (
+                        <button 
+                          onClick={() => setSimLogs([])}
+                          className="defense-chip"
+                          style={{ cursor: 'pointer', margin: 0 }}
+                        >
+                          Clear
+                        </button>
+                      )}
+                      <span className="card-pill primary" style={{ fontFamily: 'monospace', margin: 0 }}>STDOUT</span>
+                    </div>
                   </div>
 
-                  <div className="console-body">
+                  <div className="console-body" style={{ color: 'var(--text-primary)', flex: 1, padding: '0.5rem 0' }}>
                     {simLogs.map((log, idx) => {
-                      let typeClass = 'console-line-info';
-                      if (log.startsWith('[Error]')) typeClass = 'console-line-err';
-                      else if (log.startsWith('[System]')) typeClass = 'console-line-sys';
-
+                      const match = log.match(/^\[([^\]]+)\](.*)$/);
+                      if (match) {
+                        const tag = match[1];
+                        const text = match[2];
+                        let badgeClass = 'log-badge-info';
+                        let textClass = 'console-line-info';
+                        
+                        if (tag === 'System') {
+                          badgeClass = 'log-badge-sys';
+                          textClass = 'console-line-sys';
+                        } else if (tag === 'Error') {
+                          badgeClass = 'log-badge-err';
+                          textClass = 'console-line-err';
+                        }
+                        
+                        return (
+                          <div key={idx} className={textClass} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', marginBottom: '0.35rem', lineHeight: 1.4 }}>
+                            <span className={`log-badge ${badgeClass}`}>{tag}</span>
+                            <span style={{ fontSize: '0.75rem', fontFamily: 'monospace' }}>{text.trim()}</span>
+                          </div>
+                        );
+                      }
+                      
                       return (
-                        <div key={idx} className={typeClass}>
+                        <div key={idx} className="console-line-info" style={{ paddingLeft: '3.8rem', fontSize: '0.75rem', fontFamily: 'monospace', marginBottom: '0.35rem', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
                           {log}
                         </div>
                       );
                     })}
                     
                     {isSimulating && (
-                      <div className="console-line-sys" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
-                        <span className="connection-indicator online"></span>
-                        <span>Red Team agent is generating next progression plan...</span>
+                      <div className="console-line-sys" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.75rem', paddingLeft: '0.25rem' }}>
+                        <span className="connection-indicator online" style={{ width: '8px', height: '8px' }}></span>
+                        <span style={{ fontSize: '0.75rem', color: 'var(--success)', fontWeight: 700 }}>Red Team agent is generating next campaign bounds...</span>
                       </div>
                     )}
                     
                     {simLogs.length === 0 && (
-                      <p style={{ color: 'var(--text-muted)', textAlign: 'center', margin: 'auto' }}>
-                        Configuration selected. Click "Trigger Adaptive Loop" to start.
+                      <p style={{ color: 'var(--text-muted)', textAlign: 'center', margin: 'auto', fontSize: '0.75rem' }}>
+                        Simulation idle. Select a persona and click "Trigger Adaptive Loop" to initiate.
                       </p>
                     )}
                   </div>
 
                   {simResult && (
-                    <div className="alert-box">
-                      <div className="alert-header">
-                        <CheckCircle2 size={16} />
+                    <div className="alert-box" style={{ border: '1px solid var(--success-border)', backgroundColor: 'var(--success-bg)', padding: '0.75rem', borderRadius: '8px', marginTop: '0.75rem' }}>
+                      <div className="alert-header" style={{ color: 'var(--success)', display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.75rem', fontWeight: 700 }}>
+                        <CheckCircle2 size={14} />
                         <span>Adaptive challenge completed!</span>
                       </div>
-                      <div className="alert-grid">
+                      <div className="alert-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem', marginTop: '0.35rem' }}>
                         <div>
-                          <div className="alert-val-lbl">Rounds Executed</div>
-                          <div className="alert-val-num">{simResult.total_rounds_executed}</div>
+                          <div className="alert-val-lbl" style={{ fontSize: '0.55rem', color: 'var(--text-muted)' }}>Rounds Run</div>
+                          <div className="alert-val-num" style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--success)' }}>{simResult.total_rounds_executed}</div>
                         </div>
                         <div>
-                          <div className="alert-val-lbl">Final Evasion Rate</div>
-                          <div className="alert-val-num">{simResult.final_evasion_rate * 100}%</div>
+                          <div className="alert-val-lbl" style={{ fontSize: '0.55rem', color: 'var(--text-muted)' }}>Final Evasion</div>
+                          <div className="alert-val-num" style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--success)' }}>{simResult.final_evasion_rate * 100}%</div>
                         </div>
                         <div>
-                          <div className="alert-val-lbl">Ensemble Performance</div>
-                          <div className="alert-val-num" style={{ fontSize: '0.75rem' }}>Recall Increased</div>
+                          <div className="alert-val-lbl" style={{ fontSize: '0.55rem', color: 'var(--text-muted)' }}>Def. Performance</div>
+                          <div className="alert-val-num" style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--success)' }}>Recall Up</div>
                         </div>
                       </div>
                     </div>
