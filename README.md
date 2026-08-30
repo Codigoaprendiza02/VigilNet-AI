@@ -92,3 +92,24 @@ Expected `/health` response:
   "redis": "connected"
 }
 ```
+
+---
+
+## Demo Day Guide & Seeding (Phase 9)
+
+To ensure your Mastercard Innovation Challenge demo runs flawlessly without depleting your Gemini API key free tier quotas, you can seed a clean pre-recorded progression dataset into MongoDB Atlas.
+
+### 1. Seeding Pre-Recorded Demo Data
+To populate the database with a clean, presentable round-over-round evasion decay curve (3 rounds of progression for all 5 personas), run:
+```powershell
+python scripts/seed_demo_data.py
+```
+> [!NOTE]
+> If your MongoDB already contains test rounds, the script will skip seeding by default to avoid overwriting them. If you wish to clear your database and start fresh with the clean demo curves, pass the `--clear` flag:
+> `python scripts/seed_demo_data.py --clear`
+
+### 2. Live Demo Safeguard (Stage Runs)
+During the live demo on stage, you can trigger a live simulation round from the **Simulation Runner** tab on the React dashboard:
+- This will execute the dynamic Gemini-based Red Team agent planning and routing, score it via the ensemble detector, and append the outcome directly to your charts.
+- This is safe and does not disrupt the pre-recorded reference curves; it simply appends a new round at the end of the timeline.
+- It is recommended to run a 2-round challenge live to show the real-time feedback loop and adaptation.
