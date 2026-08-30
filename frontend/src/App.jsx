@@ -5,8 +5,6 @@ import {
   TrendingUp, 
   RotateCcw, 
   BookOpen, 
-  Sun, 
-  Moon, 
   Server, 
   Play, 
   AlertTriangle, 
@@ -25,8 +23,8 @@ import {
 } from 'recharts';
 
 export default function App() {
-  // Theme state: default to dark (cyberpunk stage lighting vibe)
-  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
+  // Theme state: fixed to light theme by default
+  const [theme] = useState('light');
   const [apiBase, setApiBase] = useState(() => localStorage.getItem('apiBase') || 'http://127.0.0.1:8000');
   const [isConnected, setIsConnected] = useState(false);
   const [activeTab, setActiveTab] = useState('taxonomy');
@@ -71,11 +69,10 @@ export default function App() {
     }
   };
 
-  // Sync theme to document element
+  // Sync light theme to document element
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
-  }, [theme]);
+    document.documentElement.setAttribute('data-theme', 'light');
+  }, []);
 
   // Persist API base
   useEffect(() => {
@@ -153,10 +150,6 @@ export default function App() {
     } catch (err) {
       console.error("Error fetching stats:", err);
     }
-  };
-
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
   };
 
   const triggerChallenge = async () => {
@@ -258,48 +251,21 @@ export default function App() {
 
   return (
     <div className="app-container">
-      {/* Top Header */}
-      <header className="header">
-        <div className="header-brand">
-          <div className="brand-logo-container">
-            <Shield size={24} />
-          </div>
-          <div className="brand-text">
-            <h1>VigilNet AI</h1>
-            <p>Closed-Loop Fraud Red-Teaming & Defense Ensemble</p>
-          </div>
-        </div>
-
-        <div className="header-actions">
-          {/* API Connection Host */}
-          <div className="api-connection-selector">
-            <Server size={14} style={{ opacity: 0.6 }} />
-            <input 
-              type="text" 
-              value={apiBase} 
-              onChange={(e) => setApiBase(e.target.value)}
-              className="api-input"
-              placeholder="API base URL"
-            />
-            <div className="connection-badge">
-              <span className={`connection-indicator ${isConnected ? 'online' : 'offline'}`}></span>
-              <span className={`badge-text ${isConnected ? 'online' : 'offline'}`}>
-                {isConnected ? 'CONNECTED' : 'OFFLINE'}
-              </span>
-            </div>
-          </div>
-
-          {/* Theme Toggle */}
-          <button onClick={toggleTheme} className="btn-icon" title="Toggle theme">
-            {theme === 'dark' ? <Sun size={14} style={{ color: '#fbbf24' }} /> : <Moon size={14} style={{ color: '#6366f1' }} />}
-          </button>
-        </div>
-      </header>
-
-      {/* Main Workspace Layout */}
+      {/* Main Workspace Layout (Header is fully removed) */}
       <div className="workspace">
         {/* Sidebar Nav */}
         <aside className="sidebar">
+          {/* VigilNet AI branding kept in the sidebar */}
+          <div className="header-brand" style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div className="brand-logo-container">
+              <Shield size={24} />
+            </div>
+            <div className="brand-text">
+              <h1 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)' }}>VigilNet AI</h1>
+              <p style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>Fraud Control Center</p>
+            </div>
+          </div>
+
           <p className="sidebar-title">Control Center</p>
           
           <button 
@@ -333,6 +299,24 @@ export default function App() {
             <RotateCcw size={16} />
             <span>Evasion Replay</span>
           </button>
+
+          {/* Connection Host Selector placed inside the sidebar */}
+          <div className="api-connection-selector" style={{ marginTop: '1.5rem', marginBottom: '1rem', width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flex: 1 }}>
+              <Server size={14} style={{ opacity: 0.6 }} />
+              <input 
+                type="text" 
+                value={apiBase} 
+                onChange={(e) => setApiBase(e.target.value)}
+                className="api-input"
+                style={{ width: '90px', fontSize: '0.7rem' }}
+                placeholder="API base"
+              />
+            </div>
+            <div className="connection-badge" style={{ padding: '0.15rem 0.35rem' }}>
+              <span className={`connection-indicator ${isConnected ? 'online' : 'offline'}`}></span>
+            </div>
+          </div>
 
           <div className="sidebar-footer">
             <div className="sidebar-footer-row">
