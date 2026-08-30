@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Shield, 
   Activity, 
@@ -11,11 +11,7 @@ import {
   Play, 
   AlertTriangle, 
   CheckCircle2, 
-  RefreshCw, 
-  ArrowRight,
-  Eye,
-  Check,
-  X
+  RefreshCw 
 } from 'lucide-react';
 import {
   LineChart,
@@ -199,7 +195,6 @@ export default function App() {
           `[System] Challenge completed successfully!`,
           `[System] Final Evasion Rate: ${data.challenge_summary.final_evasion_rate * 100}%`
         ]);
-        // Refresh rounds lists and stats charts
         fetchRounds();
         fetchStats();
       } else {
@@ -262,162 +257,154 @@ export default function App() {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Top Banner / Navigation */}
-      <header className="glass-effect rounded-none border-t-0 border-x-0 px-6 py-4 flex flex-wrap items-center justify-between gap-4 z-10">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl text-white shadow-lg animate-pulse">
-            <Shield className="h-6 w-6 text-white" />
+    <div className="app-container">
+      {/* Top Header */}
+      <header className="header">
+        <div className="header-brand">
+          <div className="brand-logo-container">
+            <Shield size={24} />
           </div>
-          <div>
-            <h1 className="text-xl font-bold tracking-tight text-[var(--text-primary)]">VigilNet AI</h1>
-            <p className="text-xs text-[var(--text-secondary)]">Closed-Loop Fraud Red-Teaming & Defense Ensemble</p>
+          <div className="brand-text">
+            <h1>VigilNet AI</h1>
+            <p>Closed-Loop Fraud Red-Teaming & Defense Ensemble</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-4 flex-wrap">
-          {/* API Connection Settings */}
-          <div className="flex items-center gap-2 bg-slate-900/40 dark:bg-slate-800/40 p-1.5 rounded-lg border border-[var(--card-border)]">
-            <Server className="h-4 w-4 text-[var(--text-muted)] ml-2" />
+        <div className="header-actions">
+          {/* API Connection Host */}
+          <div className="api-connection-selector">
+            <Server size={14} style={{ opacity: 0.6 }} />
             <input 
               type="text" 
               value={apiBase} 
               onChange={(e) => setApiBase(e.target.value)}
-              className="bg-transparent border-none text-xs text-[var(--text-primary)] focus:outline-none w-48 font-mono"
+              className="api-input"
               placeholder="API base URL"
             />
-            <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[10px] font-semibold bg-slate-950/60">
-              <span className={`h-2.5 w-2.5 rounded-full ${isConnected ? 'bg-emerald-500 animate-ping' : 'bg-rose-500'}`}></span>
-              <span className={isConnected ? 'text-emerald-400' : 'text-rose-400'}>
+            <div className="connection-badge">
+              <span className={`connection-indicator ${isConnected ? 'online' : 'offline'}`}></span>
+              <span className={`badge-text ${isConnected ? 'online' : 'offline'}`}>
                 {isConnected ? 'CONNECTED' : 'OFFLINE'}
               </span>
             </div>
           </div>
 
-          {/* Theme Switcher */}
-          <button 
-            onClick={toggleTheme}
-            className="p-2 rounded-lg bg-slate-900/40 dark:bg-slate-800/40 border border-[var(--card-border)] hover:border-[var(--primary)] text-[var(--text-primary)]"
-            title="Toggle theme"
-          >
-            {theme === 'dark' ? <Sun className="h-4 w-4 text-amber-400" /> : <Moon className="h-4 w-4 text-indigo-500" />}
+          {/* Theme Toggle */}
+          <button onClick={toggleTheme} className="btn-icon" title="Toggle theme">
+            {theme === 'dark' ? <Sun size={14} style={{ color: '#fbbf24' }} /> : <Moon size={14} style={{ color: '#6366f1' }} />}
           </button>
         </div>
       </header>
 
       {/* Main Workspace Layout */}
-      <div className="flex-1 flex flex-col md:flex-row">
-        {/* Sidebar Tabs */}
-        <aside className="w-full md:w-64 border-r border-[var(--card-border)] bg-[var(--sidebar-bg)] p-4 flex flex-col gap-2">
-          <p className="text-[10px] uppercase font-bold tracking-wider text-[var(--text-muted)] mb-2 px-3">Control Center</p>
+      <div className="workspace">
+        {/* Sidebar Nav */}
+        <aside className="sidebar">
+          <p className="sidebar-title">Control Center</p>
           
           <button 
             onClick={() => setActiveTab('taxonomy')}
-            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${activeTab === 'taxonomy' ? 'bg-[var(--nav-active)] border border-[var(--primary)] text-[var(--primary)]' : 'text-[var(--text-secondary)] hover:bg-slate-800/10 hover:text-[var(--text-primary)]'}`}
+            className={`sidebar-nav-btn ${activeTab === 'taxonomy' ? 'active' : ''}`}
           >
-            <BookOpen className="h-4 w-4" />
+            <BookOpen size={16} />
             <span>Fraud Taxonomy</span>
           </button>
 
           <button 
             onClick={() => setActiveTab('runner')}
-            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${activeTab === 'runner' ? 'bg-[var(--nav-active)] border border-[var(--primary)] text-[var(--primary)]' : 'text-[var(--text-secondary)] hover:bg-slate-800/10 hover:text-[var(--text-primary)]'}`}
+            className={`sidebar-nav-btn ${activeTab === 'runner' ? 'active' : ''}`}
           >
-            <Activity className="h-4 w-4" />
+            <Activity size={16} />
             <span>Simulation Runner</span>
           </button>
 
           <button 
             onClick={() => setActiveTab('metrics')}
-            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${activeTab === 'metrics' ? 'bg-[var(--nav-active)] border border-[var(--primary)] text-[var(--primary)]' : 'text-[var(--text-secondary)] hover:bg-slate-800/10 hover:text-[var(--text-primary)]'}`}
+            className={`sidebar-nav-btn ${activeTab === 'metrics' ? 'active' : ''}`}
           >
-            <TrendingUp className="h-4 w-4" />
+            <TrendingUp size={16} />
             <span>Metrics Curves</span>
           </button>
 
           <button 
             onClick={() => setActiveTab('replay')}
-            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${activeTab === 'replay' ? 'bg-[var(--nav-active)] border border-[var(--primary)] text-[var(--primary)]' : 'text-[var(--text-secondary)] hover:bg-slate-800/10 hover:text-[var(--text-primary)]'}`}
+            className={`sidebar-nav-btn ${activeTab === 'replay' ? 'active' : ''}`}
           >
-            <RotateCcw className="h-4 w-4" />
+            <RotateCcw size={16} />
             <span>Evasion Replay</span>
           </button>
 
-          <div className="mt-auto border-t border-[var(--card-border)] pt-4 px-3 text-[11px] text-[var(--text-muted)]">
-            <div className="flex justify-between mb-1">
+          <div className="sidebar-footer">
+            <div className="sidebar-footer-row">
               <span>FastAPI Port</span>
-              <span className="font-mono text-[var(--text-secondary)]">{apiBase.split(':').pop() || '8000'}</span>
+              <span className="sidebar-footer-val">{apiBase.split(':').pop() || '8000'}</span>
             </div>
-            <div className="flex justify-between">
+            <div className="sidebar-footer-row">
               <span>Database Status</span>
-              <span className="font-mono text-emerald-500">CONNECTED</span>
+              <span className="sidebar-footer-val" style={{ color: 'var(--success)' }}>CONNECTED</span>
             </div>
           </div>
         </aside>
 
-        {/* View Switcher Content */}
-        <main className="flex-1 p-6 overflow-y-auto animate-fade-in">
+        {/* Dynamic Workspace Content */}
+        <main className="main-panel animate-fade-in">
           
-          {/* TAB 1: Taxonomy View */}
+          {/* VIEW 1: Taxonomy */}
           {activeTab === 'taxonomy' && (
-            <div className="flex flex-col gap-6">
-              <div>
-                <h2 className="text-2xl font-bold tracking-tight text-[var(--text-primary)]">Fraud Taxonomy</h2>
-                <p className="text-sm text-[var(--text-secondary)]">Overview of simulated attack vectors, mathematical models, and the protecting ensemble layers.</p>
+            <div className="grid-stack">
+              <div className="panel-title-container">
+                <h2 className="panel-title">Fraud Taxonomy</h2>
+                <p className="panel-subtitle">Overview of simulated attack vectors, mathematical models, and the protecting ensemble layers.</p>
               </div>
 
-              <div className="grid grid-cols-1 gap-6">
-                {taxonomyItems.map((item) => (
-                  <div key={item.id} className="glass-effect p-6 hover:border-[var(--card-hover-border)] transition-all">
-                    <div className="flex flex-wrap items-start justify-between gap-4">
-                      <div>
-                        <div className="flex items-center gap-3">
-                          <h3 className="text-lg font-semibold text-[var(--text-primary)]">{item.name}</h3>
-                          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[var(--nav-active)] text-[var(--primary)]">ACTIVE</span>
-                        </div>
-                        <p className="text-sm text-[var(--text-secondary)] mt-1">{item.desc}</p>
-                      </div>
-                      <div className="flex flex-col items-end text-xs">
-                        <span className="text-[var(--text-muted)]">Ensemble Defense</span>
-                        <span className="font-semibold text-emerald-500">{item.defense}</span>
-                      </div>
+              {taxonomyItems.map((item) => (
+                <div key={item.id} className="card hoverable">
+                  <div className="card-header-row">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                      <h3 className="card-title">{item.name}</h3>
+                      <span className="card-pill primary">ACTIVE</span>
                     </div>
-
-                    <div className="mt-4 pt-4 border-t border-[var(--card-border)] grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                      <div>
-                        <span className="text-[var(--text-muted)] uppercase block tracking-wider font-bold text-[9px] mb-1">Statistical Generator</span>
-                        <span className="text-[var(--text-primary)] font-mono">{item.generator}</span>
-                      </div>
-                      <div>
-                        <span className="text-[var(--text-muted)] uppercase block tracking-wider font-bold text-[9px] mb-1">Engineered Attributes</span>
-                        <span className="text-[var(--text-primary)] font-mono">{item.engineered}</span>
-                      </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', fontSize: '0.75rem' }}>
+                      <span style={{ color: 'var(--text-muted)' }}>Ensemble Defense</span>
+                      <span style={{ fontWeight: 700, color: 'var(--success)' }}>{item.defense}</span>
                     </div>
                   </div>
-                ))}
-              </div>
+                  <p className="card-description">{item.desc}</p>
+                  
+                  <div className="details-row-container">
+                    <div>
+                      <span className="details-block-label">Statistical Generator</span>
+                      <div className="details-block-value">{item.generator}</div>
+                    </div>
+                    <div>
+                      <span className="details-block-label">Engineered Attributes</span>
+                      <div className="details-block-value">{item.engineered}</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
 
-          {/* TAB 2: Simulation Runner */}
+          {/* VIEW 2: Simulation Runner */}
           {activeTab === 'runner' && (
-            <div className="flex flex-col gap-6">
-              <div>
-                <h2 className="text-2xl font-bold tracking-tight text-[var(--text-primary)]">Simulation Runner</h2>
-                <p className="text-sm text-[var(--text-secondary)]">Trigger and orchestrate Red-Team campaign runs and observe adversarial loop adaptations.</p>
+            <div className="grid-stack">
+              <div className="panel-title-container">
+                <h2 className="panel-title">Simulation Runner</h2>
+                <p className="panel-subtitle">Trigger and orchestrate Red-Team campaign runs and observe adversarial loop adaptations.</p>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Configuration Panel */}
-                <div className="glass-effect p-6 flex flex-col gap-4 lg:col-span-1">
-                  <h3 className="text-md font-bold text-[var(--text-primary)] border-b border-[var(--card-border)] pb-2 mb-2">Campaign Config</h3>
+              <div className="grid-cols-3">
+                {/* Inputs card */}
+                <div className="card">
+                  <h3 className="card-title" style={{ borderBottom: '1px solid var(--card-border)', paddingBottom: '0.5rem' }}>Campaign Config</h3>
                   
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-semibold text-[var(--text-secondary)]">Fraud Persona</label>
+                  <div className="form-group">
+                    <label className="form-label">Fraud Persona</label>
                     <select 
                       value={selectedPersona}
                       onChange={(e) => setSelectedPersona(e.target.value)}
-                      className="bg-slate-900 border border-[var(--card-border)] rounded-lg p-2 text-sm text-[var(--text-primary)] focus:border-[var(--primary)] font-sans"
+                      className="form-select"
                     >
                       <option value="card_tester">Card Tester (Debit/Credit)</option>
                       <option value="synthetic_identity">Synthetic Identity (IEEE-CIS)</option>
@@ -427,99 +414,110 @@ export default function App() {
                     </select>
                   </div>
 
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-semibold text-[var(--text-secondary)]">Progression Rounds</label>
+                  <div className="form-group">
+                    <label className="form-label">Progression Rounds</label>
                     <input 
                       type="number" 
                       min="1" 
                       max="5"
                       value={roundsToRun}
                       onChange={(e) => setRoundsToRun(parseInt(e.target.value) || 1)}
-                      className="bg-slate-900 border border-[var(--card-border)] rounded-lg p-2 text-sm text-[var(--text-primary)] focus:border-[var(--primary)] font-mono"
+                      className="form-input"
+                      style={{ fontFamily: 'monospace' }}
                     />
                   </div>
 
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-semibold text-[var(--text-secondary)]">Custom Objective (Optional)</label>
+                  <div className="form-group">
+                    <label className="form-label">Custom Objective (Optional)</label>
                     <textarea 
                       placeholder={personaDefaultConfigs[selectedPersona].objective}
                       value={customObjective}
                       onChange={(e) => setCustomObjective(e.target.value)}
-                      className="bg-slate-900 border border-[var(--card-border)] rounded-lg p-2 text-xs text-[var(--text-primary)] focus:border-[var(--primary)] h-16 resize-none"
+                      className="form-textarea"
                     />
                   </div>
 
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-semibold text-[var(--text-secondary)]">Custom Target Profile (Optional)</label>
+                  <div className="form-group">
+                    <label className="form-label">Custom Target Profile (Optional)</label>
                     <textarea 
                       placeholder={personaDefaultConfigs[selectedPersona].profile}
                       value={customTargetProfile}
                       onChange={(e) => setCustomTargetProfile(e.target.value)}
-                      className="bg-slate-900 border border-[var(--card-border)] rounded-lg p-2 text-xs text-[var(--text-primary)] focus:border-[var(--primary)] h-16 resize-none"
+                      className="form-textarea"
                     />
                   </div>
 
                   <button 
                     onClick={triggerChallenge}
                     disabled={isSimulating || !isConnected}
-                    className="mt-4 w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-700 text-white font-semibold hover:shadow-lg disabled:opacity-50 transition-all hover:scale-[1.02] cursor-pointer"
+                    className="btn-submit"
                   >
                     {isSimulating ? (
                       <>
-                        <RefreshCw className="h-4 w-4 animate-spin" />
+                        <RefreshCw size={14} className="animate-spin" />
                         <span>Running Loop...</span>
                       </>
                     ) : (
                       <>
-                        <Play className="h-4 w-4 fill-current" />
+                        <Play size={14} fill="currentColor" />
                         <span>Trigger Adaptive Loop</span>
                       </>
                     )}
                   </button>
                 </div>
 
-                {/* Simulation Logs Console */}
-                <div className="glass-effect p-6 lg:col-span-2 flex flex-col h-[520px] bg-slate-950/80 border-[var(--card-border)]">
-                  <div className="flex justify-between items-center border-b border-[var(--card-border)] pb-2 mb-3">
-                    <h3 className="text-md font-bold text-[var(--text-primary)]">Simulation Console Logs</h3>
-                    <span className="px-2 py-0.5 rounded text-[9px] font-bold tracking-wider bg-slate-900 text-[var(--primary)] font-mono">STDOUT</span>
+                {/* Console card */}
+                <div className="console-box">
+                  <div className="card-header-row" style={{ marginBottom: '0.75rem' }}>
+                    <h3 className="card-title">Simulation Console Logs</h3>
+                    <span className="card-pill primary" style={{ fontFamily: 'monospace' }}>STDOUT</span>
                   </div>
 
-                  <div className="flex-1 overflow-y-auto font-mono text-xs text-cyan-400/90 flex flex-col gap-1.5 pr-2">
-                    {simLogs.map((log, idx) => (
-                      <div key={idx} className={log.startsWith('[Error]') ? 'text-rose-400' : log.startsWith('[System]') ? 'text-emerald-400' : 'text-slate-300'}>
-                        {log}
-                      </div>
-                    ))}
+                  <div className="console-body">
+                    {simLogs.map((log, idx) => {
+                      let typeClass = 'console-line-info';
+                      if (log.startsWith('[Error]')) typeClass = 'console-line-err';
+                      else if (log.startsWith('[System]')) typeClass = 'console-line-sys';
+
+                      return (
+                        <div key={idx} className={typeClass}>
+                          {log}
+                        </div>
+                      );
+                    })}
+                    
                     {isSimulating && (
-                      <div className="text-cyan-400 flex items-center gap-1.5 mt-2">
-                        <span className="h-2 w-2 bg-cyan-400 rounded-full animate-ping"></span>
+                      <div className="console-line-sys" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+                        <span className="connection-indicator online"></span>
                         <span>Red Team agent is generating next progression plan...</span>
                       </div>
                     )}
+                    
                     {simLogs.length === 0 && (
-                      <p className="text-[var(--text-muted)] text-center my-auto">Configuration selected. Click "Trigger Adaptive Loop" to start.</p>
+                      <p style={{ color: 'var(--text-muted)', textAlign: 'center', margin: 'auto' }}>
+                        Configuration selected. Click "Trigger Adaptive Loop" to start.
+                      </p>
                     )}
                   </div>
 
                   {simResult && (
-                    <div className="mt-4 p-4 rounded-xl border border-emerald-500/20 bg-emerald-950/20 flex flex-col gap-2">
-                      <div className="flex items-center gap-2 text-emerald-400 text-sm font-semibold">
-                        <CheckCircle2 className="h-4 w-4" />
+                    <div className="alert-box">
+                      <div className="alert-header">
+                        <CheckCircle2 size={16} />
                         <span>Adaptive challenge completed!</span>
                       </div>
-                      <div className="grid grid-cols-3 gap-4 text-xs mt-1 text-slate-300">
+                      <div className="alert-grid">
                         <div>
-                          <span className="text-[var(--text-muted)] uppercase block text-[9px]">Rounds Executed</span>
-                          <span className="font-semibold text-emerald-400 font-mono">{simResult.total_rounds_executed}</span>
+                          <div className="alert-val-lbl">Rounds Executed</div>
+                          <div className="alert-val-num">{simResult.total_rounds_executed}</div>
                         </div>
                         <div>
-                          <span className="text-[var(--text-muted)] uppercase block text-[9px]">Final Evasion Rate</span>
-                          <span className="font-semibold text-emerald-400 font-mono">{simResult.final_evasion_rate * 100}%</span>
+                          <div className="alert-val-lbl">Final Evasion Rate</div>
+                          <div className="alert-val-num">{simResult.final_evasion_rate * 100}%</div>
                         </div>
                         <div>
-                          <span className="text-[var(--text-muted)] uppercase block text-[9px]">Ensemble Performance</span>
-                          <span className="font-semibold text-emerald-400">Recall Increased</span>
+                          <div className="alert-val-lbl">Ensemble Performance</div>
+                          <div className="alert-val-num" style={{ fontSize: '0.75rem' }}>Recall Increased</div>
                         </div>
                       </div>
                     </div>
@@ -529,176 +527,177 @@ export default function App() {
             </div>
           )}
 
-          {/* TAB 3: Metrics Curves */}
+          {/* VIEW 3: Metrics curves */}
           {activeTab === 'metrics' && (
-            <div className="flex flex-col gap-6">
-              <div>
-                <h2 className="text-2xl font-bold tracking-tight text-[var(--text-primary)]">Metrics Curves</h2>
-                <p className="text-sm text-[var(--text-secondary)]">Verify round-over-round evasion rates and recall curves showing detection success.</p>
+            <div className="grid-stack">
+              <div className="panel-title-container">
+                <h2 className="panel-title">Metrics Curves</h2>
+                <p className="panel-subtitle">Verify round-over-round evasion rates and recall curves showing detection success.</p>
               </div>
 
-              {/* Chart Grid */}
-              <div className="grid grid-cols-1 gap-6">
-                {['card_tester', 'structuring', 'phishing', 'fake_invoice', 'synthetic_identity'].map(pName => {
-                  const data = chartData[pName] || [];
-                  if (data.length === 0) return null;
-                  
-                  return (
-                    <div key={pName} className="glass-effect p-6 flex flex-col gap-4">
-                      <div className="flex justify-between items-center border-b border-[var(--card-border)] pb-2">
-                        <h3 className="text-lg font-bold text-[var(--text-primary)] uppercase tracking-wide">
-                          {pName.replace('_', ' ')} Performance
-                        </h3>
-                        <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[var(--nav-active)] text-[var(--primary)] font-bold">
-                          {data.length} rounds logged
-                        </span>
-                      </div>
-
-                      <div className="h-[280px] w-full">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <LineChart data={data}>
-                            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                            <XAxis 
-                              dataKey="round_id" 
-                              stroke="var(--text-secondary)"
-                              fontSize={10} 
-                            />
-                            <YAxis 
-                              stroke="var(--text-secondary)"
-                              domain={[0, 100]}
-                              fontSize={10}
-                              unit="%"
-                            />
-                            <Tooltip 
-                              contentStyle={{ 
-                                backgroundColor: 'var(--background)', 
-                                borderColor: 'var(--card-border)',
-                                color: 'var(--text-primary)',
-                                borderRadius: '8px',
-                                fontSize: '11px'
-                              }} 
-                            />
-                            <Legend verticalAlign="top" height={36} iconType="circle" />
-                            <Line 
-                              type="monotone" 
-                              name="Evasion Rate" 
-                              dataKey="evasion_rate" 
-                              stroke="var(--danger)" 
-                              strokeWidth={3}
-                              dot={{ r: 5 }}
-                              activeDot={{ r: 8 }}
-                            />
-                            <Line 
-                              type="monotone" 
-                              name="Blue Team Recall" 
-                              dataKey="recall" 
-                              stroke="var(--primary)" 
-                              strokeWidth={3}
-                              dot={{ r: 5 }}
-                              activeDot={{ r: 8 }}
-                            />
-                          </LineChart>
-                        </ResponsiveContainer>
-                      </div>
+              {['card_tester', 'structuring', 'phishing', 'fake_invoice', 'synthetic_identity'].map(pName => {
+                const data = chartData[pName] || [];
+                if (data.length === 0) return null;
+                
+                return (
+                  <div key={pName} className="card">
+                    <div className="card-header-row">
+                      <h3 className="card-title" style={{ textTransform: 'uppercase' }}>
+                        {pName.replace('_', ' ')} Performance
+                      </h3>
+                      <span className="card-pill primary">
+                        {data.length} rounds logged
+                      </span>
                     </div>
-                  );
-                })}
 
-                {Object.keys(chartData).length === 0 && (
-                  <div className="glass-effect p-12 text-center text-[var(--text-muted)]">
-                    No simulation records available in MongoDB Atlas yet. Trigger a loop to view curves.
+                    <div className="chart-container">
+                      <ResponsiveContainer width="100%" height={280}>
+                        <LineChart data={data}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                          <XAxis 
+                            dataKey="round_id" 
+                            stroke="var(--text-secondary)"
+                            fontSize={10} 
+                          />
+                          <YAxis 
+                            stroke="var(--text-secondary)"
+                            domain={[0, 100]}
+                            fontSize={10}
+                            unit="%"
+                          />
+                          <Tooltip 
+                            contentStyle={{ 
+                              backgroundColor: 'var(--background)', 
+                              borderColor: 'var(--card-border)',
+                              color: 'var(--text-primary)',
+                              borderRadius: '8px',
+                              fontSize: '11px'
+                            }} 
+                          />
+                          <Legend verticalAlign="top" height={36} iconType="circle" />
+                          <Line 
+                            type="monotone" 
+                            name="Evasion Rate" 
+                            dataKey="evasion_rate" 
+                            stroke="var(--danger)" 
+                            strokeWidth={3}
+                            dot={{ r: 5 }}
+                            activeDot={{ r: 8 }}
+                          />
+                          <Line 
+                            type="monotone" 
+                            name="Blue Team Recall" 
+                            dataKey="recall" 
+                            stroke="var(--primary)" 
+                            strokeWidth={3}
+                            dot={{ r: 5 }}
+                            activeDot={{ r: 8 }}
+                          />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
                   </div>
-                )}
-              </div>
+                );
+              })}
+
+              {Object.keys(chartData).length === 0 && (
+                <div className="card" style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>
+                  No simulation records available in MongoDB Atlas yet. Trigger a loop to view curves.
+                </div>
+              )}
             </div>
           )}
 
-          {/* TAB 4: Loop Replay View */}
+          {/* VIEW 4: Loop Replay */}
           {activeTab === 'replay' && (
-            <div className="flex flex-col gap-6">
-              <div>
-                <h2 className="text-2xl font-bold tracking-tight text-[var(--text-primary)]">Loop Replay</h2>
-                <p className="text-sm text-[var(--text-secondary)]">Investigate past rounds, check evasion briefs, and examine per-layer anomaly score scorecards.</p>
+            <div className="grid-stack">
+              <div className="panel-title-container">
+                <h2 className="panel-title">Loop Replay</h2>
+                <p className="panel-subtitle">Investigate past rounds, check evasion briefs, and examine per-layer anomaly score scorecards.</p>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Rounds List Sidebar */}
-                <div className="glass-effect p-6 flex flex-col gap-4 lg:col-span-1 h-[600px] overflow-y-auto">
-                  <h3 className="text-md font-bold text-[var(--text-primary)] border-b border-[var(--card-border)] pb-2 mb-2">Round History</h3>
+              <div className="grid-cols-3">
+                {/* Round Sidebar */}
+                <div className="card" style={{ maxHeight: '560px', overflowY: 'auto' }}>
+                  <h3 className="card-title" style={{ borderBottom: '1px solid var(--card-border)', paddingBottom: '0.5rem', marginBottom: '0.5rem' }}>Round History</h3>
                   
-                  {isLoadingRounds ? (
-                    <div className="text-center my-auto flex flex-col items-center gap-2">
-                      <RefreshCw className="h-5 w-5 animate-spin text-[var(--primary)]" />
-                      <span className="text-xs text-[var(--text-secondary)]">Loading rounds...</span>
-                    </div>
-                  ) : rounds.map(r => (
-                    <div 
-                      key={r.round_id}
-                      onClick={() => setSelectedRound(r)}
-                      className={`p-4 rounded-xl border transition-all cursor-pointer flex flex-col gap-1.5 ${selectedRound?.round_id === r.round_id ? 'border-[var(--primary)] bg-[var(--nav-active)]' : 'border-[var(--card-border)] hover:border-slate-500/30 bg-slate-900/10'}`}
-                    >
-                      <div className="flex justify-between items-center">
-                        <span className="text-xs font-mono font-bold text-[var(--text-primary)]">{r.round_id}</span>
-                        <span className="px-2 py-0.5 rounded text-[9px] uppercase font-bold bg-slate-950/60 text-[var(--text-secondary)] font-sans">
-                          {r.persona.replace('_', ' ')}
-                        </span>
+                  <div className="history-list">
+                    {isLoadingRounds ? (
+                      <div style={{ textAlign: 'center', padding: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+                        <RefreshCw size={20} className="animate-spin" style={{ color: 'var(--primary)' }} />
+                        <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Loading rounds...</span>
                       </div>
-                      
-                      <div className="flex justify-between items-center text-xs text-[var(--text-secondary)] mt-1">
-                        <span>Evasion: <strong className="text-rose-500 font-mono">{(r.evasion_rate * 100).toFixed(0)}%</strong></span>
-                        <span>Recall: <strong className="text-cyan-500 font-mono">{((1 - r.evasion_rate) * 100).toFixed(0)}%</strong></span>
+                    ) : rounds.map(r => (
+                      <div 
+                        key={r.round_id}
+                        onClick={() => setSelectedRound(r)}
+                        className={`history-item ${selectedRound?.round_id === r.round_id ? 'active' : ''}`}
+                      >
+                        <div className="history-item-top">
+                          <span className="history-item-id">{r.round_id}</span>
+                          <span className="card-pill primary" style={{ fontSize: '8px' }}>
+                            {r.persona.replace('_', ' ')}
+                          </span>
+                        </div>
+                        
+                        <div className="history-item-stats">
+                          <span>Evasion: <strong style={{ color: 'var(--danger)' }}>{(r.evasion_rate * 100).toFixed(0)}%</strong></span>
+                          <span>Recall: <strong style={{ color: 'var(--primary)' }}>{((1 - r.evasion_rate) * 100).toFixed(0)}%</strong></span>
+                        </div>
+                        
+                        <div className="history-item-date">
+                          {r.timestamp ? new Date(r.timestamp).toLocaleString() : 'N/A'}
+                        </div>
                       </div>
-                      
-                      <div className="text-[10px] text-[var(--text-muted)] text-right">
-                        {r.timestamp ? new Date(r.timestamp).toLocaleString() : 'N/A'}
-                      </div>
-                    </div>
-                  ))}
+                    ))}
 
-                  {rounds.length === 0 && !isLoadingRounds && (
-                    <p className="text-[var(--text-muted)] text-center text-xs my-auto">No rounds stored in MongoDB. Trigger one to view logs.</p>
-                  )}
+                    {rounds.length === 0 && !isLoadingRounds && (
+                      <p style={{ color: 'var(--text-muted)', textAlign: 'center', fontSize: '0.75rem', margin: 'auto' }}>
+                        No rounds stored in MongoDB. Trigger one to view logs.
+                      </p>
+                    )}
+                  </div>
                 </div>
 
-                {/* Round Details Console */}
-                <div className="glass-effect p-6 lg:col-span-2 h-[600px] overflow-y-auto flex flex-col gap-4">
+                {/* Round details container */}
+                <div className="card" style={{ minHeight: '560px', overflowY: 'auto' }}>
                   {selectedRound ? (
                     <>
-                      {/* Round Heading */}
-                      <div className="flex justify-between items-start border-b border-[var(--card-border)] pb-4">
+                      {/* Round stats top */}
+                      <div className="card-header-row">
                         <div>
-                          <div className="flex items-center gap-3">
-                            <h3 className="text-lg font-bold text-[var(--text-primary)] font-mono">{selectedRound.round_id}</h3>
-                            <span className="px-2 py-0.5 rounded text-[10px] uppercase font-mono font-bold bg-[var(--nav-active)] text-[var(--primary)]">
-                              {selectedRound.persona}
-                            </span>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                            <h3 className="card-title" style={{ fontFamily: 'monospace' }}>{selectedRound.round_id}</h3>
+                            <span className="card-pill primary">{selectedRound.persona}</span>
                           </div>
-                          <p className="text-xs text-[var(--text-muted)] mt-1">Executed on {new Date(selectedRound.timestamp).toLocaleString()}</p>
+                          <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
+                            Executed on {new Date(selectedRound.timestamp).toLocaleString()}
+                          </p>
                         </div>
 
-                        <div className="flex items-center gap-6 text-sm">
-                          <div className="text-center">
-                            <span className="text-[9px] text-[var(--text-muted)] uppercase block">Total Steps</span>
-                            <span className="font-mono text-lg font-bold">{selectedRound.total_steps}</span>
+                        <div style={{ display: 'flex', gap: '1.25rem', fontSize: '0.85rem' }}>
+                          <div style={{ textAlign: 'center' }}>
+                            <div style={{ fontSize: '0.55rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Total Steps</div>
+                            <div style={{ fontFamily: 'monospace', fontWeight: 700 }}>{selectedRound.total_steps}</div>
                           </div>
-                          <div className="text-center">
-                            <span className="text-[9px] text-[var(--text-muted)] uppercase block text-rose-500">Blocked</span>
-                            <span className="font-mono text-lg font-bold text-rose-500">{selectedRound.blocked_steps}</span>
+                          <div style={{ textAlign: 'center' }}>
+                            <div style={{ fontSize: '0.55rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Blocked</div>
+                            <div style={{ fontFamily: 'monospace', fontWeight: 700, color: 'var(--danger)' }}>{selectedRound.blocked_steps}</div>
                           </div>
-                          <div className="text-center">
-                            <span className="text-[9px] text-[var(--text-muted)] uppercase block text-cyan-400">Evasion</span>
-                            <span className="font-mono text-lg font-bold text-cyan-400">{(selectedRound.evasion_rate * 100).toFixed(0)}%</span>
+                          <div style={{ textAlign: 'center' }}>
+                            <div style={{ fontSize: '0.55rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Evasion</div>
+                            <div style={{ fontFamily: 'monospace', fontWeight: 700, color: 'var(--primary)' }}>{(selectedRound.evasion_rate * 100).toFixed(0)}%</div>
                           </div>
                         </div>
                       </div>
 
-                      {/* Evasion Brief Overview */}
-                      <div className="p-4 rounded-xl border border-rose-500/20 bg-rose-950/10 flex flex-col gap-1.5">
-                        <div className="flex items-center gap-2 text-rose-400 text-xs font-bold uppercase tracking-wider">
-                          <AlertTriangle className="h-4 w-4" />
+                      {/* Evasion Brief Box */}
+                      <div className="evasion-brief-card">
+                        <div className="evasion-brief-header">
+                          <AlertTriangle size={14} />
                           <span>Adversarial Evasion Brief Summary</span>
                         </div>
-                        <p className="text-xs text-slate-300 leading-relaxed font-sans">
+                        <p className="evasion-brief-desc">
                           Adversary encountered {selectedRound.blocked_steps} blocks across {selectedRound.total_steps} total transaction projections.
                           {selectedRound.blocked_steps > 0 
                             ? " Campaign feedback loop successfully adjusted the next round's generation parameters, shifting transaction bounds to evade ensemble detectors." 
@@ -707,25 +706,27 @@ export default function App() {
                         </p>
                       </div>
 
-                      {/* Detailed Events Table */}
-                      <div className="flex-1 flex flex-col gap-2">
-                        <h4 className="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] mb-1">Transaction Steps & Scorecards</h4>
+                      {/* Event scorecards table */}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', flex: 1 }}>
+                        <h4 style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-muted)' }}>
+                          Transaction Steps & Scorecards
+                        </h4>
                         
-                        <div className="border border-[var(--card-border)] rounded-xl overflow-hidden flex-1 overflow-y-auto">
-                          <table className="w-full text-left text-xs border-collapse">
-                            <thead className="bg-slate-900/60 text-[var(--text-secondary)] font-semibold border-b border-[var(--card-border)]">
+                        <div className="table-wrapper">
+                          <table className="table-scorecard">
+                            <thead>
                               <tr>
-                                <th className="p-3">Step</th>
-                                <th className="p-3">Type</th>
-                                <th className="p-3">Amount</th>
-                                <th className="p-3 text-center">Tabular</th>
-                                <th className="p-3 text-center">Graph</th>
-                                <th className="p-3 text-center">Seq</th>
-                                <th className="p-3 text-center">Text</th>
-                                <th className="p-3 text-right">Outcome</th>
+                                <th>Step</th>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th style={{ textAlign: 'center' }}>Tabular</th>
+                                <th style={{ textAlign: 'center' }}>Graph</th>
+                                <th style={{ textAlign: 'center' }}>Seq</th>
+                                <th style={{ textAlign: 'center' }}>Text</th>
+                                <th style={{ textAlign: 'right' }}>Outcome</th>
                               </tr>
                             </thead>
-                            <tbody className="divide-y divide-[var(--card-border)] text-slate-300">
+                            <tbody>
                               {roundEvents.map((ev, idx) => {
                                 const payload = ev.payload || {};
                                 const stepNum = payload.step_number || (idx + 1);
@@ -735,16 +736,16 @@ export default function App() {
                                 const layers = det.layers || {};
 
                                 return (
-                                  <tr key={ev.event_id || idx} className="hover:bg-slate-900/30">
-                                    <td className="p-3 font-mono font-semibold">{stepNum}</td>
-                                    <td className="p-3"><span className="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 text-slate-300">{tType}</span></td>
-                                    <td className="p-3 font-mono">${amt.toFixed(2)}</td>
-                                    <td className="p-3 text-center font-mono text-slate-400">{(layers.tabular !== undefined ? layers.tabular * 100 : 0).toFixed(0)}%</td>
-                                    <td className="p-3 text-center font-mono text-slate-400">{(layers.graph !== undefined ? layers.graph * 100 : 0).toFixed(0)}%</td>
-                                    <td className="p-3 text-center font-mono text-slate-400">{(layers.sequence !== undefined ? layers.sequence * 100 : 0).toFixed(0)}%</td>
-                                    <td className="p-3 text-center font-mono text-slate-400">{(layers.text !== undefined ? layers.text * 100 : 0).toFixed(0)}%</td>
-                                    <td className="p-3 text-right">
-                                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${det.is_flagged ? 'bg-rose-950/60 text-rose-400 border border-rose-500/25' : 'bg-emerald-950/60 text-emerald-400 border border-emerald-500/25'}`}>
+                                  <tr key={ev.event_id || idx}>
+                                    <td style={{ fontFamily: 'monospace', fontWeight: 700 }}>{stepNum}</td>
+                                    <td><span className="card-pill primary" style={{ fontSize: '8px', textTransform: 'uppercase' }}>{tType}</span></td>
+                                    <td style={{ fontFamily: 'monospace' }}>${amt.toFixed(2)}</td>
+                                    <td style={{ textAlign: 'center', fontFamily: 'monospace', color: 'var(--text-secondary)' }}>{(layers.tabular !== undefined ? layers.tabular * 100 : 0).toFixed(0)}%</td>
+                                    <td style={{ textAlign: 'center', fontFamily: 'monospace', color: 'var(--text-secondary)' }}>{(layers.graph !== undefined ? layers.graph * 100 : 0).toFixed(0)}%</td>
+                                    <td style={{ textAlign: 'center', fontFamily: 'monospace', color: 'var(--text-secondary)' }}>{(layers.sequence !== undefined ? layers.sequence * 100 : 0).toFixed(0)}%</td>
+                                    <td style={{ textAlign: 'center', fontFamily: 'monospace', color: 'var(--text-secondary)' }}>{(layers.text !== undefined ? layers.text * 100 : 0).toFixed(0)}%</td>
+                                    <td style={{ textAlign: 'right' }}>
+                                      <span className={`badge-outcome ${det.is_flagged ? 'blocked' : 'clean'}`}>
                                         {det.is_flagged ? 'BLOCKED' : 'CLEAN'}
                                       </span>
                                     </td>
@@ -754,7 +755,9 @@ export default function App() {
                               
                               {roundEvents.length === 0 && (
                                 <tr>
-                                  <td colSpan="8" className="p-8 text-center text-[var(--text-muted)]">No event details stored for this round.</td>
+                                  <td colSpan="8" style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)' }}>
+                                    No event details stored for this round.
+                                  </td>
                                 </tr>
                               )}
                             </tbody>
@@ -763,9 +766,9 @@ export default function App() {
                       </div>
                     </>
                   ) : (
-                    <div className="text-center my-auto text-[var(--text-muted)] flex flex-col items-center gap-2 font-sans">
-                      <RotateCcw className="h-8 w-8 opacity-40 animate-spin-reverse" />
-                      <span>Select a round from the history sidebar to view replay scorecard matrix.</span>
+                    <div style={{ textAlign: 'center', margin: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+                      <RotateCcw size={24} style={{ opacity: 0.3 }} />
+                      <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Select a round from the history sidebar to view replay scorecard matrix.</span>
                     </div>
                   )}
                 </div>
