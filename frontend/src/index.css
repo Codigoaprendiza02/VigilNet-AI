@@ -99,9 +99,10 @@ body {
 
 /* Page Layout */
 .app-container {
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 /* Header Styles */
@@ -234,11 +235,13 @@ body {
   flex: 1;
   display: flex;
   flex-direction: row;
+  overflow: hidden;
 }
 
 @media (max-width: 768px) {
   .workspace {
     flex-direction: column;
+    overflow-y: auto;
   }
 }
 
@@ -251,6 +254,8 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  overflow: hidden; /* Prevent sidebar from scrolling entirely */
+  flex-shrink: 0;   /* Keep sidebar size locked */
 }
 
 @media (max-width: 768px) {
