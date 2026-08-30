@@ -4,6 +4,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 from app.orchestrator.runner import CampaignOrchestrator
 from app.agents import get_agent
+from app.db.mongodb import get_database
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/orchestrator", tags=["orchestrator"])
@@ -142,4 +143,79 @@ async def trigger_challenge_loop(request: Optional[ChallengeRequest] = None):
             status_code=500,
             detail=f"Challenge loop execution failed: {str(e)}"
         )
+
+
+@router.get("/rounds")
+async def get_rounds():
+    """Returns all rounds stored in MongoDB, sorted by timestamp descending."""
+    try:
+        db = get_database()
+        cursor = db.rounds.find({}, {"_id": 0}).sort("timestamp", -1)
+        rounds = await cursor.to_list(length=100)
+        # Convert datetime objects to ISO strings for JSON serialization
+        for r in rounds:
+            if "timestamp" in r and r["timestamp"]:
+                r["timestamp"] = r["timestamp"].isoformat()
+        return {"status": "success", "rounds": rounds}
+    except Exception as e:
+        logger.error(f"Error fetching rounds: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/events/{round_id}")
+async def get_round_events(round_id: str):
+    """Returns all transaction events executed during a specific round."""
+    try:
+        db = get_database()
+        cursor = db.events.find({"round_id": round_id}, {"_id": 0}).sort("timestamp", 1)
+        events = await cursor.to_list(length=100)
+        # Convert datetimes and UUIDs to string representation
+        for ev in events:
+            if "timestamp" in ev and ev["timestamp"]:
+                ev["timestamp"] = ev["timestamp"].isoformat()
+            if "detection_result" in ev and ev["detection_result"] and "scored_at" in ev["detection_result"]:
+                ev["detection_result"]["scored_at"] = ev["detection_result"]["scored_at"].isoformat()
+        return {"status": "success", "events": events}
+    except Exception as e:
+        logger.error(f"Error fetching round events: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/stats")
+async def get_metrics_stats():
+    """Returns aggregated recall and evasion rate stats grouped by persona for line charting."""
+    try:
+        db = get_database()
+        cursor = db.rounds.find({}, {"_id": 0}).sort("timestamp", 1)
+        all_rounds = await cursor.to_list(length=500)
+        
+        personas_data = {}
+        for r in all_rounds:
+            p = r.get("persona") or "unknown"
+            if p not in personas_data:
+                personas_data[p] = []
+            
+            ev_rate = r.get("evasion_rate", 0.0)
+            recall = 1.0 - ev_rate
+            
+            ts_str = ""
+            if "timestamp" in r and r["timestamp"]:
+                ts_str = r["timestamp"].isoformat()
+
+            personas_data[p].append({
+                "round_id": r.get("round_id"),
+                "timestamp": ts_str,
+                "total_steps": r.get("total_steps", 0),
+                "blocked_steps": r.get("blocked_steps", 0),
+                "evasion_rate": float(round(ev_rate * 100.0, 1)),
+                "recall": float(round(recall * 100.0, 1))
+            })
+            
+        return {
+            "status": "success",
+            "stats": personas_data
+        }
+    except Exception as e:
+        logger.error(f"Error fetching stats: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 

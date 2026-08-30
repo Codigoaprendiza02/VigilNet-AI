@@ -1,17 +1,16 @@
-# VigilNet AI — Frontend Dashboard
+# React + Vite
 
-This directory will contain the React (Vite) frontend application for the VigilNet AI dashboard.
+This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
-## Objective (Phase 8)
-- Display the taxonomy of payment fraud vectors.
-- Stream live round events and counts.
-- Plot per-round recall/FPR curves for active personas.
-- Replay past rounds, showcasing evasion briefs and persona adaptations.
-- Support both dark and light modes.
+Currently, two official plugins are available:
 
-## Setup & Run
-Once Phase 8 begins, initialize React/Vite in this folder and install dependencies:
-```bash
-npm install
-npm run dev
-```
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+
+## React Compiler
+
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+
+## Expanding the Oxlint configuration
+
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.

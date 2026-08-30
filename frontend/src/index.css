@@ -1,0 +1,128 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+/* Color Variables Design Tokens */
+:root {
+  /* Default: Cyberpunk Dark Mode (Navy / Red / Cyan) */
+  --font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  
+  --background: #030812;
+  --foreground: #f1f5f9;
+  
+  --card-bg: rgba(10, 20, 38, 0.65);
+  --card-border: rgba(30, 64, 175, 0.25);
+  --card-hover-border: rgba(6, 182, 212, 0.45);
+  
+  --primary: #06b6d4;         /* Electric Cyan */
+  --primary-glow: rgba(6, 182, 212, 0.25);
+  --secondary: #3b82f6;       /* Radiant Blue */
+  --secondary-glow: rgba(59, 130, 246, 0.25);
+  
+  --success: #10b981;         /* Emerald */
+  --success-glow: rgba(16, 185, 129, 0.15);
+  --danger: #f43f5e;          /* Rose/Red */
+  --danger-glow: rgba(244, 63, 94, 0.15);
+  
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  
+  --sidebar-bg: rgba(7, 13, 27, 0.9);
+  --nav-active: rgba(6, 182, 212, 0.15);
+  
+  --glass-bg: rgba(15, 23, 42, 0.35);
+  --glass-border: rgba(255, 255, 255, 0.05);
+}
+
+:root[data-theme='light'] {
+  /* Premium Ice Blue Light Mode */
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  
+  --card-bg: rgba(255, 255, 255, 0.85);
+  --card-border: rgba(203, 213, 225, 0.7);
+  --card-hover-border: rgba(59, 130, 246, 0.5);
+  
+  --primary: #2563eb;         /* Royal Blue */
+  --primary-glow: rgba(37, 99, 235, 0.15);
+  --secondary: #0d9488;       /* Teal */
+  --secondary-glow: rgba(13, 148, 136, 0.15);
+  
+  --success: #059669;         /* Emerald Darker */
+  --success-glow: rgba(5, 150, 105, 0.1);
+  --danger: #e11d48;          /* Deep Crimson */
+  --danger-glow: rgba(225, 29, 72, 0.1);
+  
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  
+  --sidebar-bg: #f1f5f9;
+  --nav-active: rgba(37, 99, 235, 0.1);
+  
+  --glass-bg: rgba(255, 255, 255, 0.5);
+  --glass-border: rgba(0, 0, 0, 0.03);
+}
+
+/* Global Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.15s ease;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--background);
+  color: var(--foreground);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Glassmorphism Background Effect */
+.glass-effect {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--card-border);
+  background-color: var(--card-bg);
+  border-radius: 16px;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--card-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-glow {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 var(--primary-glow); }
+  70% { transform: scale(1.02); box-shadow: 0 0 0 8px rgba(0,0,0,0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0,0,0,0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+/* Grid & Layout Utilities */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
