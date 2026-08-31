@@ -293,9 +293,11 @@ export default function App() {
         <aside className="sidebar">
           {/* VigilNet AI branding kept in the sidebar */}
           <div className="header-brand" style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <div className="brand-logo-container">
-              <Shield size={24} />
-            </div>
+            <img 
+              src="/VigilNetAI_logo.png" 
+              alt="VigilNet AI Logo" 
+              style={{ width: '38px', height: '38px', objectFit: 'contain', borderRadius: '6px' }} 
+            />
             <div className="brand-text">
               <h1 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)' }}>VigilNet AI</h1>
               <p style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>Fraud Control Center</p>
