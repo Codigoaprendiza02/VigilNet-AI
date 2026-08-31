@@ -72,10 +72,10 @@ class CardTesterAgent(BaseAgent):
                     'newbalanceDest': 500.0 + step_plan.amount
                 }
 
-        # Generate realistic account numbers matching PaySim's naming schemas
-        # PaySim format: 'C' (customer) and 'M' (merchant)
-        # Origin is always a customer ('C' + 10 digits)
-        name_orig = f"C{random.randint(1000000000, 9999999999)}"
+        # Pin the card to be identical for all steps in this round to simulate testing the same card
+        import hashlib
+        h = hashlib.md5(round_id.encode('utf-8')).hexdigest()
+        name_orig = f"C{int(h[:8], 16) % 9000000000 + 1000000000}"
         
         # Destination is merchant ('M' + 10 digits) if type is PAYMENT, otherwise customer ('C')
         if tx_type == 'PAYMENT':

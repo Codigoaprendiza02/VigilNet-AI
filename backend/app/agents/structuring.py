@@ -67,8 +67,11 @@ class StructuringAgent(BaseAgent):
                     'newbalanceDest': 1000.0 + step_plan.amount
                 }
 
-        # Build account names
-        name_orig = f"C{random.randint(1000000000, 9999999999)}"
+        # Pin the origin account to be identical for all steps in this round to simulate structuring from a single origin
+        import hashlib
+        h = hashlib.md5(round_id.encode('utf-8')).hexdigest()
+        name_orig = f"C{int(h[:8], 16) % 9000000000 + 1000000000}"
+        
         if tx_type == 'PAYMENT':
             name_dest = f"M{random.randint(1000000000, 9999999999)}"
         else:

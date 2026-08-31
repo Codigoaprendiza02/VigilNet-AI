@@ -1,6 +1,7 @@
 import random
 import uuid
 import logging
+import hashlib
 from datetime import datetime, timedelta
 from typing import Dict, Any, Optional
 from sdv.sampling import Condition
@@ -95,7 +96,7 @@ class SyntheticIdentityAgent(BaseAgent):
                 "newbalanceOrig": 5000.0 - step_plan.amount,
                 "oldbalanceDest": 10000.0,
                 "newbalanceDest": 10000.0 + step_plan.amount,
-                "nameOrig": f"C{random.randint(1000000000, 9999999999)}",
+                "nameOrig": f"C{int(hashlib.md5(round_id.encode('utf-8')).hexdigest()[:8], 16) % 9000000000 + 1000000000}",
                 "nameDest": f"M{random.randint(1000000000, 9999999999)}",
                 # IEEE-CIS specific features
                 "TransactionAmt": float(step_plan.amount),
