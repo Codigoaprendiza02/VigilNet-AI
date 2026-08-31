@@ -33,7 +33,7 @@ export default function App() {
   const [apiBase, setApiBase] = useState(() => localStorage.getItem('apiBase') || 'http://127.0.0.1:8000');
   const [isConnected, setIsConnected] = useState(false);
   const [activeTab, setActiveTab] = useState('taxonomy');
-  const [expandedCard, setExpandedCard] = useState(null);
+  const [selectedTaxonomyCard, setSelectedTaxonomyCard] = useState(null);
   
   // Simulation config & execution states
   const [selectedPersona, setSelectedPersona] = useState('phishing');
@@ -352,40 +352,15 @@ export default function App() {
 
         {/* Dynamic Workspace Content */}
         <main className="main-panel animate-fade-in">
-          
-          {/* System Welcome Quick-Start Guide */}
-          <div className="card" style={{ marginBottom: '1.5rem', background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.12) 0%, rgba(13, 148, 136, 0.08) 100%)', border: '1px solid var(--primary)', padding: '1.25rem', borderRadius: '12px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem' }}>
-              <Shield size={18} style={{ color: 'var(--primary)' }} />
-              <h3 style={{ margin: 0, fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--primary)' }}>
-                WELCOME TO VIGILNET AI FRAUD CONTROL CENTER
-              </h3>
-            </div>
-            <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.4 }}>
-              VigilNet is an automated, closed-loop multi-agent system. The Red Team plans campaign simulations, the Blue Team ensemble filters fraud events, and the Miss-Analysis agent adaptively evolves defenses. Use these views to operate the controls:
-            </p>
-            <div style={{ display: 'flex', gap: '1rem', marginTop: '0.75rem', flexWrap: 'wrap', borderTop: '1px solid var(--card-border)', paddingTop: '0.5rem' }}>
-              <div style={{ fontSize: '0.65rem', color: 'var(--text-secondary)' }}>
-                <strong style={{ color: 'var(--primary)' }}>1. Fraud Taxonomy:</strong> Threat dictionary outlining active fraud vectors and core mechanics.
-              </div>
-              <div style={{ fontSize: '0.65rem', color: 'var(--text-secondary)' }}>
-                <strong style={{ color: 'var(--primary)' }}>2. Simulation Runner:</strong> Trigger live, adaptive multi-round challenge loops.
-              </div>
-              <div style={{ fontSize: '0.65rem', color: 'var(--text-secondary)' }}>
-                <strong style={{ color: 'var(--primary)' }}>3. Metrics Curves:</strong> Verify visual charts displaying Recall vs Evasion rates.
-              </div>
-              <div style={{ fontSize: '0.65rem', color: 'var(--text-secondary)' }}>
-                <strong style={{ color: 'var(--primary)' }}>4. Evasion Replay:</strong> Audit logs showing detailed evasion briefs & scorecards.
-              </div>
-            </div>
-          </div>
 
           {/* VIEW 1: Taxonomy */}
           {activeTab === 'taxonomy' && (
             <div className="grid-stack">
               <div className="panel-title-container">
                 <h2 className="panel-title">Fraud Taxonomy</h2>
-                <p className="panel-subtitle">Overview of simulated attack vectors, mathematical models, and the protecting ensemble layers.</p>
+                <p className="panel-subtitle" style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                  A threat dictionary of implemented fraud attack vectors. Tap any card below to open its technical specifications, core mechanics, and data structures in a detailed inspector window.
+                </p>
               </div>
 
               {/* Intuitive Loop Flowchart Card */}
@@ -439,64 +414,92 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Taxonomy Cards Grid (2-Columns with Minimized/Expanded state) */}
+              {/* Taxonomy Cards Grid (Clickable to open Modal) */}
               <div className="grid-2-columns">
-                {taxonomyItems.map((item) => {
-                  const isExpanded = expandedCard === item.id;
-                  return (
-                    <div key={item.id} className="card hoverable" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', transition: 'all 0.2s ease' }}>
-                      <div className="card-header-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                          {item.icon}
-                          <h3 className="card-title" style={{ margin: 0 }}>{item.name}</h3>
-                        </div>
-                        <span className="card-pill primary" style={{ fontSize: '8px' }}>ACTIVE</span>
+                {taxonomyItems.map((item) => (
+                  <div 
+                    key={item.id} 
+                    onClick={() => setSelectedTaxonomyCard(item)}
+                    className="card hoverable" 
+                    style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', cursor: 'pointer', transition: 'all 0.2s ease', border: '1px solid var(--card-border)' }}
+                  >
+                    <div className="card-header-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        {item.icon}
+                        <h3 className="card-title" style={{ margin: 0 }}>{item.name}</h3>
+                      </div>
+                      <span className="card-pill primary" style={{ fontSize: '8px' }}>ACTIVE</span>
+                    </div>
+
+                    <p className="card-description" style={{ fontSize: '0.8rem', margin: 0 }}>{item.desc}</p>
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--card-border)', paddingTop: '0.5rem', marginTop: 'auto' }}>
+                      <div className="chip-group" style={{ margin: 0 }}>
+                        {item.layers.map((layer) => (
+                          <span key={layer} className="defense-chip" style={{ fontSize: '0.6rem' }}>{layer} Shield</span>
+                        ))}
+                      </div>
+                      <span style={{ fontSize: '0.65rem', color: 'var(--primary)', fontWeight: 'bold' }}>Details &rarr;</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Separate Window Modal Overlay */}
+              {selectedTaxonomyCard && (
+                <div className="modal-overlay" onClick={() => setSelectedTaxonomyCard(null)}>
+                  <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ border: '2px solid var(--primary)', backgroundColor: '#070c19' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--card-border)', paddingBottom: '0.75rem', marginBottom: '1rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        {selectedTaxonomyCard.icon}
+                        <h3 className="card-title" style={{ margin: 0, fontSize: '1.2rem', color: 'var(--primary)' }}>{selectedTaxonomyCard.name}</h3>
+                      </div>
+                      <button 
+                        onClick={() => setSelectedTaxonomyCard(null)} 
+                        className="defense-chip"
+                        style={{ cursor: 'pointer', color: 'var(--danger)', border: '1px solid var(--danger-border)', margin: 0 }}
+                      >
+                        CLOSE [X]
+                      </button>
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                      <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.4, margin: 0 }}>
+                        {selectedTaxonomyCard.desc}
+                      </p>
+
+                      <div>
+                        <span className="details-block-label" style={{ display: 'block', marginBottom: '0.35rem', fontWeight: 'bold' }}>Core Mechanics Workflow</span>
+                        <ul className="mechanics-list" style={{ margin: 0, paddingLeft: '1.2rem' }}>
+                          {selectedTaxonomyCard.mechanics.map((step, sIdx) => (
+                            <li key={sIdx} style={{ fontSize: '0.8rem', marginBottom: '0.25rem', color: 'var(--text-secondary)' }}>{step}</li>
+                          ))}
+                        </ul>
                       </div>
 
-                      <p className="card-description" style={{ fontSize: '0.8rem', margin: 0 }}>{item.desc}</p>
-
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--card-border)', paddingTop: '0.5rem' }}>
-                        <div className="chip-group" style={{ margin: 0 }}>
-                          {item.layers.map((layer) => (
-                            <span key={layer} className="defense-chip" style={{ fontSize: '0.6rem' }}>{layer} Shield</span>
+                      <div style={{ borderTop: '1px solid var(--card-border)', paddingTop: '0.75rem' }}>
+                        <span className="details-block-label" style={{ display: 'block', marginBottom: '0.35rem' }}>Active Ensemble Shields</span>
+                        <div className="chip-group" style={{ display: 'flex', gap: '0.35rem', margin: 0 }}>
+                          {selectedTaxonomyCard.layers.map((layer) => (
+                            <span key={layer} className="defense-chip" style={{ fontSize: '0.65rem' }}>{layer} Layer Shield</span>
                           ))}
                         </div>
-                        <button 
-                          onClick={() => setExpandedCard(isExpanded ? null : item.id)}
-                          className="defense-chip"
-                          style={{ cursor: 'pointer', margin: 0, textTransform: 'uppercase', fontSize: '0.6rem', border: isExpanded ? '1px dashed var(--danger)' : '1px solid var(--primary)', color: isExpanded ? 'var(--danger)' : 'var(--primary)', backgroundColor: 'transparent' }}
-                        >
-                          {isExpanded ? 'Minimize (-)' : 'Expand Details (+)'}
-                        </button>
                       </div>
 
-                      {isExpanded && (
-                        <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', borderTop: '1px solid var(--card-border)', paddingTop: '0.75rem' }}>
-                          <div>
-                            <span className="details-block-label" style={{ display: 'block', marginBottom: '0.25rem', fontWeight: 'bold' }}>Core Mechanics</span>
-                            <ul className="mechanics-list" style={{ margin: 0 }}>
-                              {item.mechanics.map((step, sIdx) => (
-                                <li key={sIdx}>{step}</li>
-                              ))}
-                            </ul>
-                          </div>
-
-                          <div className="details-row-container" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', borderTop: '1px dashed var(--card-border)', paddingTop: '0.75rem' }}>
-                            <div>
-                              <span className="details-block-label">Generator Profile</span>
-                              <div className="details-block-value" style={{ fontSize: '0.7rem' }}>{item.generator}</div>
-                            </div>
-                            <div>
-                              <span className="details-block-label">Telemetry Fields</span>
-                              <div className="details-block-value" style={{ fontSize: '0.7rem' }}>{item.engineered}</div>
-                            </div>
-                          </div>
+                      <div className="details-row-container" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', borderTop: '1px dashed var(--card-border)', paddingTop: '0.75rem' }}>
+                        <div>
+                          <span className="details-block-label">Statistical Generator Profile</span>
+                          <div className="details-block-value" style={{ fontSize: '0.75rem', fontFamily: 'monospace' }}>{selectedTaxonomyCard.generator}</div>
                         </div>
-                      )}
+                        <div>
+                          <span className="details-block-label">Engineered Telemetry Fields</span>
+                          <div className="details-block-value" style={{ fontSize: '0.75rem', fontFamily: 'monospace' }}>{selectedTaxonomyCard.engineered}</div>
+                        </div>
+                      </div>
                     </div>
-                  );
-                })}
-              </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
@@ -505,7 +508,9 @@ export default function App() {
             <div className="grid-stack">
               <div className="panel-title-container">
                 <h2 className="panel-title">Simulation Runner</h2>
-                <p className="panel-subtitle">Trigger and orchestrate Red-Team campaign runs and observe adversarial loop adaptations.</p>
+                <p className="panel-subtitle" style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                  Trigger live, multi-round adaptive fraud campaign simulations. Configure campaign details below, click "Trigger Adaptive Loop", and observe real-time adversarial adjustments in the log console.
+                </p>
               </div>
 
               <div className="grid-cols-3">
@@ -701,7 +706,9 @@ export default function App() {
             <div className="grid-stack">
               <div className="panel-title-container">
                 <h2 className="panel-title">Metrics Curves</h2>
-                <p className="panel-subtitle">Verify round-over-round evasion rates and recall curves showing detection success.</p>
+                <p className="panel-subtitle" style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                  Visualize round-over-round system performance. See how adversary Evasion Rates decline and detector Recall rates improve as the adaptive feedback loop evolves.
+                </p>
               </div>
 
               {['card_tester', 'structuring', 'phishing', 'fake_invoice', 'synthetic_identity'].map(pName => {
@@ -782,7 +789,9 @@ export default function App() {
             <div className="grid-stack">
               <div className="panel-title-container">
                 <h2 className="panel-title">Loop Replay</h2>
-                <p className="panel-subtitle">Investigate past rounds, check evasion briefs, and examine per-layer anomaly score scorecards.</p>
+                <p className="panel-subtitle" style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                  Audit past challenge rounds. Inspect the detailed evasion briefs, adaptation directives, and step-by-step layer scorecards below to verify loop decisions.
+                </p>
               </div>
 
               <div className="grid-cols-3">
