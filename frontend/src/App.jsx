@@ -340,16 +340,7 @@ export default function App() {
 
 
 
-          <div className="sidebar-footer">
-            <div className="sidebar-footer-row">
-              <span>FastAPI Port</span>
-              <span className="sidebar-footer-val">{apiBase.split(':').pop() || '8000'}</span>
-            </div>
-            <div className="sidebar-footer-row">
-              <span>Database Status</span>
-              <span className="sidebar-footer-val" style={{ color: 'var(--success)' }}>CONNECTED</span>
-            </div>
-          </div>
+
         </aside>
 
         {/* Dynamic Workspace Content */}
