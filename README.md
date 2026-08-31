@@ -19,26 +19,42 @@ VigilNet AI is a simulation and stress-testing system designed to evaluate and h
 
 ## 🏗️ Technical Architecture & Closed Loop
 
-VigilNet operates on an automated, multi-agent feedback loop:
+VigilNet operates on an automated, multi-agent closed loop:
 
 ```mermaid
 graph TD
-    A["1. Red Team Agent (Gemini)"] -->|1. Generation Objective / Bounds| B["2. SDV Generator (Synthetic Data)"]
-    B -->|2. High-fidelity synthetic transactions| C["3. Blue Team Ensemble Shield"]
-    C -->|3. Multi-layer evaluation (Tabular, Graph, Seq, Text)| D{"Blocked / Allowed?"}
-    D -->|Blocked event telemetry| E["4. Miss-Analysis Agent"]
-    D -->|Passed event logs| F["Round Scorecard (Evasion Rate)"]
-    E -->|4. Adaptive Evasion Brief & directive| A
+    A["1. Red Team Agent (Gemini)"] -->|"1. Target Objectives & Bounds"| B["2. SDV Generator (Synthetic Data)"]
+    B -->|"2. High-fidelity transaction batch"| C["3. Blue Team Ensemble Shield"]
+    C -->|"3. Multi-layered scoring"| D{"Blocked / Allowed?"}
+    D -->|"Blocked step telemetry"| E["4. Miss-Analysis Agent"]
+    D -->|"Passed logs"| F["Round Scorecard (Evasion Rate)"]
+    E -->|"4. Evasion Brief & Directive"| A
 ```
 
-1. **Red Team Agent (Gemini)**: Formulates adversarial attack directives based on target profiles and previous campaign outcomes.
-2. **SDV Generator (Synthetic Data)**: Projects realistic, high-fidelity financial transaction entries matching the planned vector bounds.
-3. **Blue Team Ensemble Shield**: Evaluates incoming transaction batches across multiple vectors:
-   - **Tabular Shield (XGBoost)**: Analyzes numerical fields, balances, and immediate fraud flags.
-   - **Graph Shield (DGL/GNN)**: Identifies structure anomalies and smurfing/money-laundering network topologies.
-   - **Sequence Shield (LSTM/Markov)**: Validates sequence behaviors, micro-deposits velocity, and card-testing timing.
-   - **Text Shield (Prompted Gemini)**: Evaluates unstructured elements like business email communications and invoice descriptions.
-4. **Miss-Analysis Agent**: Compiles detailed failure reports for blocked transaction steps, directing the Red Team on how to shift bounds and parameters in subsequent rounds to evade the ensemble.
+### Core Backend Components & Mechanisms
+
+1. **API Router Orchestration (`backend/app/routers/orchestrator.py`)**:
+   * Exposes HTTP endpoints (`/orchestrator/simulate`) to trigger multi-round loops asynchronously.
+   * Manages simulation threads using FastAPI background workers and maintains live state synchronization.
+
+2. **Simulation Runner Pipeline (`backend/app/orchestrator/runner.py`)**:
+   * Drives the orchestration sequence. For each round, it queries historical bounds, feeds them to the Red Team Gemini agent, triggers the SDV synthetic generator, feeds generated transactions through the detector ensemble, and logs results.
+   * Calculates metrics (Evasion Rate, Blocked Steps) and compiles round documents.
+
+3. **Closed-Loop Feedback & Miss-Analysis Agent (`backend/app/agents/base.py`)**:
+   * Evaluates telemetry signatures for transactions that were flagged and blocked by the Blue Team.
+   * Compiles a detailed, natural-language **Adversarial Evasion Brief**. This brief details exactly what went wrong (e.g., transaction amount was too high, velocity alert triggered, billing text contains phishing patterns).
+   * Appends the evasion brief and a tactical directive as system instructions for the Red Team agent's next round run, forcing it to adaptively adjust transaction bounds.
+
+4. **Multi-Layer Blue Team Ensemble (`backend/app/detectors/`)**:
+   * **Tabular Shield (`tabular.py`)**: Evaluates numerical metrics, user balance ratios, and structural boundaries using an XGBoost classifier.
+   * **Graph Shield (`graph.py`)**: Runs graph network analyses (GNN) to discover structure anomalies, smurfing pathways, and structured node clusters.
+   * **Sequence Shield (`sequence.py`)**: Analyzes sequential patterns and timing offsets (Markov Chain / LSTM checks) to capture card-testing velocity waves.
+   * **Text Shield (`text.py`)**: Employs Google Gemini semantic evaluations to parse unstructured BEC communication logs and false invoice descriptions.
+
+5. **Database & Cache Layer (`backend/app/db/`)**:
+   * **MongoDB Atlas**: Serves as the primary source of truth, storing permanent documents inside the `rounds` collection (timestamps, evasion rate, personas, events, and the compiled `evasion_brief`).
+   * **Redis Cache**: Holds active live-loop logs, metrics parameters, and temporary session state for smooth rendering in the React front-end console.
 
 ---
 
