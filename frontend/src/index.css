@@ -1,35 +1,35 @@
 /* Color Variables Design Tokens */
 :root {
-  /* Default Theme: Premium Dark Blue - Light Blue Radial Gradient Theme */
+  /* Default Theme: Premium Cyberpunk Space Hacker Theme */
   --font-family: 'Courier New', Courier, monospace;
   
-  --background: radial-gradient(circle at center, #1e3a8a 0%, #080d1a 100%);
-  --foreground: #ffffff;
+  --background: radial-gradient(circle at center, #020617 0%, #030712 100%);
+  --foreground: #f8fafc;
   
-  --card-bg: rgba(15, 23, 42, 0.75);
-  --card-border: rgba(37, 99, 235, 0.35);
-  --card-hover-border: rgba(6, 182, 212, 0.6);
+  --card-bg: rgba(9, 15, 30, 0.85);
+  --card-border: rgba(6, 182, 212, 0.25); /* Neon Cyan border */
+  --card-hover-border: rgba(6, 182, 212, 0.65); /* Glowing hover */
   
-  --primary: #3b82f6;         /* Royal Blue */
-  --primary-hover: #60a5fa;
-  --primary-glow: rgba(59, 130, 246, 0.2);
-  --secondary: #0d9488;       /* Teal */
-  --secondary-glow: rgba(13, 148, 136, 0.2);
+  --primary: #06b6d4;         /* Electric Cyan */
+  --primary-hover: #22d3ee;
+  --primary-glow: rgba(6, 182, 212, 0.25);
+  --secondary: #3b82f6;       /* Blue */
+  --secondary-glow: rgba(59, 130, 246, 0.25);
   
-  --success: #10b981;         /* Emerald */
-  --success-bg: rgba(16, 185, 129, 0.1);
+  --success: #10b981;         /* Neon Green */
+  --success-bg: rgba(16, 185, 129, 0.08);
   --success-border: rgba(16, 185, 129, 0.3);
-  --danger: #f43f5e;          /* Crimson */
-  --danger-bg: rgba(244, 63, 94, 0.1);
+  --danger: #f43f5e;          /* Threat Rose Red */
+  --danger-bg: rgba(244, 63, 94, 0.08);
   --danger-border: rgba(244, 63, 94, 0.3);
   
-  --text-primary: #ffffff;
-  --text-secondary: #e2e8f0;
-  --text-muted: #94a3b8;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
   
-  --sidebar-bg: rgba(10, 16, 32, 0.92);
-  --nav-active: rgba(59, 130, 246, 0.16);
-  --console-bg: rgba(15, 23, 42, 0.85);
+  --sidebar-bg: #070d19;      /* Deep black sidebar */
+  --nav-active: rgba(6, 182, 212, 0.12);
+  --console-bg: #020617;      /* Deep black console */
 }
 
 /* Global Reset */
@@ -356,9 +356,14 @@ body {
   gap: 1rem;
 }
 
+.card.hoverable {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 .card.hoverable:hover {
   border-color: var(--card-hover-border);
-  box-shadow: 0 4px 20px rgba(6, 182, 212, 0.05);
+  box-shadow: 0 0 15px var(--primary-glow);
+  transform: translateY(-2px);
 }
 
 .card-header-row {
