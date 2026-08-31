@@ -84,6 +84,18 @@ export default function App() {
     document.documentElement.setAttribute('data-theme', 'light');
   }, []);
 
+  // Disable body scrolling when modal is open
+  useEffect(() => {
+    if (selectedTaxonomyCard) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [selectedTaxonomyCard]);
+
   // Persist API base
   useEffect(() => {
     localStorage.setItem('apiBase', apiBase);
