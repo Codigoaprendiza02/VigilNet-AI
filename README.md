@@ -167,3 +167,7 @@ During the live demo on stage, you can trigger a live simulation round from the 
 - **Simulation Runner**: High-tech dashboard to trigger multi-round challenge loops. Select a persona, choose round bounds, customize objectives, and watch live execution logs scroll in the stdout console.
 - **Metrics Curves**: Neon line charts rendering round-over-round Evasion rates vs Ensemble Recall rates, visualizing the adaptive learning degradation curve.
 - **Evasion Replay**: Detailed audit portal to select past rounds and view full natural language Evasion Briefs and transaction scorecards.
+
+---
+
+Developed by Author - Riyanshi verma
