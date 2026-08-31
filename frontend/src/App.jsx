@@ -16,7 +16,8 @@ import {
   Mail,
   Users,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  X
 } from 'lucide-react';
 import {
   LineChart,
@@ -356,12 +357,11 @@ export default function App() {
               paddingTop: '1rem', 
               borderRadius: '0px', 
               width: '100%', 
-              justifyContent: isSidebarCollapsed ? 'center' : 'flex-start' 
+              justifyContent: 'center'
             }}
             title={isSidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
           >
-            {isSidebarCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
-            {!isSidebarCollapsed && <span>Collapse Sidebar</span>}
+            {isSidebarCollapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
           </button>
         </aside>
 
@@ -472,9 +472,10 @@ export default function App() {
                       <button 
                         onClick={() => setSelectedTaxonomyCard(null)} 
                         className="defense-chip"
-                        style={{ cursor: 'pointer', color: 'var(--danger)', border: '1px solid var(--danger-border)', margin: 0 }}
+                        style={{ cursor: 'pointer', color: 'var(--danger)', border: '1px solid var(--danger-border)', margin: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.35rem 0.5rem' }}
+                        title="Close Details"
                       >
-                        CLOSE [X]
+                        <X size={20} />
                       </button>
                     </div>
 
