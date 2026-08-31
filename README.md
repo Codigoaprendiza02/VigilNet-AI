@@ -2,7 +2,7 @@
   <img src="images/VigilNetAI%20logo.png" alt="VigilNet AI Logo" width="160" />
 </p>
 
-<h1 align="center">VigilNet AI 🛡️⚡</h1>
+<h1 align="center">VigilNet AI</h1>
 
 [![Python Version](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![React Version](https://img.shields.io/badge/React-18.x-cyan?logo=react&logoColor=white)](https://react.dev/)
