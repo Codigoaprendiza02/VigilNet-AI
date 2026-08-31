@@ -303,8 +303,6 @@ export default function App() {
               <p style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>Fraud Control Center</p>
             </div>
           </div>
-
-          <p className="sidebar-title">Control Center</p>
           
           <button 
             onClick={() => setActiveTab('taxonomy')}
