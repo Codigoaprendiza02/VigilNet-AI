@@ -4,12 +4,15 @@
 
 <h1 align="center">VigilNet AI</h1>
 
-[![Python Version](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
-[![React Version](https://img.shields.io/badge/React-18.x-cyan?logo=react&logoColor=white)](https://react.dev/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.100%2B-emerald?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-green?logo=mongodb&logoColor=white)](https://www.mongodb.com/)
-[![Redis](https://img.shields.io/badge/Redis-Cache-red?logo=redis&logoColor=white)](https://redis.io/)
-[![Google Gemini](https://img.shields.io/badge/GenAI-Gemini%20Pro-purple?logo=google&logoColor=white)](https://ai.google.dev/)
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white" alt="Python Version" />
+  <img src="https://img.shields.io/badge/React-18.x-cyan?logo=react&logoColor=white" alt="React Version" />
+  <img src="https://img.shields.io/badge/FastAPI-0.100%2B-emerald?logo=fastapi&logoColor=white" alt="FastAPI" />
+  <img src="https://img.shields.io/badge/MongoDB-Atlas-green?logo=mongodb&logoColor=white" alt="MongoDB" />
+  <img src="https://img.shields.io/badge/Redis-Cache-red?logo=redis&logoColor=white" alt="Redis" />
+  <img src="https://img.shields.io/badge/GenAI-Gemini%20Pro-purple?logo=google&logoColor=white" alt="Google Gemini" />
+</p>
+
 
 > **Closed-Loop Red-Team / Blue-Team Multi-Agent Adversarial System for Payment Fraud Defense.** Developed for the **Mastercard Innovation Challenge 2026**.
 
