@@ -170,4 +170,13 @@ During the live demo on stage, you can trigger a live simulation round from the 
 
 ---
 
-Developed by Author - Riyanshi verma
+## 👨‍💻 Author & Credits
+
+Designed, engineered, and developed with ⚡ by **Riyanshi Verma** for the Mastercard Innovation Challenge 2026.
+
+---
+
+<p align="center" style="font-size: 0.8rem; color: var(--text-muted);">
+  &copy; 2026 Riyanshi Verma. All rights reserved. Registered under Mastercard Innovation Challenge Specifications.
+</p>
+
