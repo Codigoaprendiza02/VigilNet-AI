@@ -227,6 +227,29 @@ async def seed_data():
             round_time = base_time + timedelta(hours=(round_num * 4) + (random.randint(0, 30) / 10))
             
             # 1. Create and insert round document
+            # Generate detailed mock evasion brief summary
+            brief = (
+                f"Campaign Evasion Feedback for Round {round_id}:\n"
+                f"Result summary: Out of {round_cfg['total_steps']} steps, {round_cfg['blocked_steps']} steps were BLOCKED by the detector.\n"
+                f"Overall Evasion Rate: {round_cfg['evasion_rate'] * 100:.2f}%\n\n"
+                "Below is the transaction-by-transaction breakdown:\n"
+            )
+            for s_idx, ev_cfg in enumerate(round_cfg["events"]):
+                step_num = s_idx + 1
+                tx_type = ev_cfg["type"]
+                amount = ev_cfg["amount"]
+                mcc = ev_cfg["mcc"]
+                action = "BLOCKED" if ev_cfg["flagged"] else "ALLOWED"
+                score = max(ev_cfg["scores"].values())
+                brief += f"- Step {step_num}: {tx_type} of ${amount:.2f} at {mcc} -> DECISION: {action} (Detector Score: {score * 100:.2f}%)\n"
+            
+            brief += (
+                "\nADAPTATION DIRECTIVE FOR THE NEXT ROUND:\n"
+                "- Modify your transaction variables (reduce amounts, change categories, adjust spacing) "
+                "for steps that were BLOCKED so they mimic normal consumer baseline transactions.\n"
+                "- Double down on strategies that successfully evaded detection (ALLOWED steps)."
+            )
+
             round_doc = {
                 "round_id": round_id,
                 "persona": persona,
@@ -234,6 +257,7 @@ async def seed_data():
                 "total_steps": round_cfg["total_steps"],
                 "blocked_steps": round_cfg["blocked_steps"],
                 "evasion_rate": round_cfg["evasion_rate"],
+                "evasion_brief": brief,
                 "timestamp": round_time
             }
             await db.rounds.insert_one(round_doc)

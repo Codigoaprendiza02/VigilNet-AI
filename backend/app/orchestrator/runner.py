@@ -107,6 +107,9 @@ class CampaignOrchestrator:
             "evasion_rate": evasion_rate,
             "timestamp": datetime.utcnow()
         }
+        
+        # Save detailed evasion brief to round document
+        round_doc["evasion_brief"] = self.generate_evasion_brief(round_doc, executed_events)
 
         try:
             await db.rounds.insert_one(round_doc)

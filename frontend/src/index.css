@@ -1,35 +1,35 @@
 /* Color Variables Design Tokens */
 :root {
-  /* Default Theme: Premium Ice Blue Light Mode */
+  /* Default Theme: Premium Dark Blue - Light Blue Radial Gradient Theme */
   --font-family: 'Courier New', Courier, monospace;
   
-  --background: #f1f5f9;
-  --foreground: #0f172a;
+  --background: radial-gradient(circle at center, #1e3a8a 0%, #080d1a 100%);
+  --foreground: #ffffff;
   
-  --card-bg: rgba(255, 255, 255, 0.95);
-  --card-border: rgba(203, 213, 225, 0.8);
-  --card-hover-border: rgba(59, 130, 246, 0.6);
+  --card-bg: rgba(15, 23, 42, 0.75);
+  --card-border: rgba(37, 99, 235, 0.35);
+  --card-hover-border: rgba(6, 182, 212, 0.6);
   
-  --primary: #2563eb;         /* Royal Blue */
-  --primary-hover: #1d4ed8;
-  --primary-glow: rgba(37, 99, 235, 0.15);
+  --primary: #3b82f6;         /* Royal Blue */
+  --primary-hover: #60a5fa;
+  --primary-glow: rgba(59, 130, 246, 0.2);
   --secondary: #0d9488;       /* Teal */
-  --secondary-glow: rgba(13, 148, 136, 0.15);
+  --secondary-glow: rgba(13, 148, 136, 0.2);
   
-  --success: #059669;         /* Emerald Darker */
-  --success-bg: rgba(5, 150, 105, 0.08);
-  --success-border: rgba(5, 150, 105, 0.25);
-  --danger: #e11d48;          /* Deep Crimson */
-  --danger-bg: rgba(225, 29, 72, 0.08);
-  --danger-border: rgba(225, 29, 72, 0.25);
+  --success: #10b981;         /* Emerald */
+  --success-bg: rgba(16, 185, 129, 0.1);
+  --success-border: rgba(16, 185, 129, 0.3);
+  --danger: #f43f5e;          /* Crimson */
+  --danger-bg: rgba(244, 63, 94, 0.1);
+  --danger-border: rgba(244, 63, 94, 0.3);
   
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #64748b;
+  --text-primary: #ffffff;
+  --text-secondary: #e2e8f0;
+  --text-muted: #94a3b8;
   
-  --sidebar-bg: #e2e8f0;
-  --nav-active: rgba(37, 99, 235, 0.08);
-  --console-bg: #ffffff;
+  --sidebar-bg: rgba(10, 16, 32, 0.92);
+  --nav-active: rgba(59, 130, 246, 0.16);
+  --console-bg: rgba(15, 23, 42, 0.85);
 }
 
 /* Global Reset */
@@ -45,7 +45,8 @@ button, input, select, textarea, h1, h2, h3, h4, h5, h6 {
 
 body {
   font-family: var(--font-family);
-  background-color: var(--background);
+  background: var(--background);
+  background-attachment: fixed;
   color: var(--foreground);
   min-height: 100vh;
   overflow-x: hidden;
@@ -437,7 +438,7 @@ body {
   border-radius: 8px;
   padding: 0.6rem 0.75rem;
   font-size: 0.85rem;
-  color: var(--text-primary);
+  color: #0f172a; /* Dark text for high readability */
   outline: none;
   font-family: inherit;
 }

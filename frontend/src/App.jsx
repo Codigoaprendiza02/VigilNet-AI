@@ -33,6 +33,7 @@ export default function App() {
   const [apiBase, setApiBase] = useState(() => localStorage.getItem('apiBase') || 'http://127.0.0.1:8000');
   const [isConnected, setIsConnected] = useState(false);
   const [activeTab, setActiveTab] = useState('taxonomy');
+  const [expandedCard, setExpandedCard] = useState(null);
   
   // Simulation config & execution states
   const [selectedPersona, setSelectedPersona] = useState('phishing');
@@ -352,6 +353,33 @@ export default function App() {
         {/* Dynamic Workspace Content */}
         <main className="main-panel animate-fade-in">
           
+          {/* System Welcome Quick-Start Guide */}
+          <div className="card" style={{ marginBottom: '1.5rem', background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.12) 0%, rgba(13, 148, 136, 0.08) 100%)', border: '1px solid var(--primary)', padding: '1.25rem', borderRadius: '12px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem' }}>
+              <Shield size={18} style={{ color: 'var(--primary)' }} />
+              <h3 style={{ margin: 0, fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--primary)' }}>
+                WELCOME TO VIGILNET AI FRAUD CONTROL CENTER
+              </h3>
+            </div>
+            <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.4 }}>
+              VigilNet is an automated, closed-loop multi-agent system. The Red Team plans campaign simulations, the Blue Team ensemble filters fraud events, and the Miss-Analysis agent adaptively evolves defenses. Use these views to operate the controls:
+            </p>
+            <div style={{ display: 'flex', gap: '1rem', marginTop: '0.75rem', flexWrap: 'wrap', borderTop: '1px solid var(--card-border)', paddingTop: '0.5rem' }}>
+              <div style={{ fontSize: '0.65rem', color: 'var(--text-secondary)' }}>
+                <strong style={{ color: 'var(--primary)' }}>1. Fraud Taxonomy:</strong> Threat dictionary outlining active fraud vectors and core mechanics.
+              </div>
+              <div style={{ fontSize: '0.65rem', color: 'var(--text-secondary)' }}>
+                <strong style={{ color: 'var(--primary)' }}>2. Simulation Runner:</strong> Trigger live, adaptive multi-round challenge loops.
+              </div>
+              <div style={{ fontSize: '0.65rem', color: 'var(--text-secondary)' }}>
+                <strong style={{ color: 'var(--primary)' }}>3. Metrics Curves:</strong> Verify visual charts displaying Recall vs Evasion rates.
+              </div>
+              <div style={{ fontSize: '0.65rem', color: 'var(--text-secondary)' }}>
+                <strong style={{ color: 'var(--primary)' }}>4. Evasion Replay:</strong> Audit logs showing detailed evasion briefs & scorecards.
+              </div>
+            </div>
+          </div>
+
           {/* VIEW 1: Taxonomy */}
           {activeTab === 'taxonomy' && (
             <div className="grid-stack">
@@ -411,50 +439,63 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Taxonomy Cards Grid (2-Columns) */}
+              {/* Taxonomy Cards Grid (2-Columns with Minimized/Expanded state) */}
               <div className="grid-2-columns">
-                {taxonomyItems.map((item) => (
-                  <div key={item.id} className="card hoverable">
-                    <div className="card-header-row">
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        {item.icon}
-                        <h3 className="card-title">{item.name}</h3>
+                {taxonomyItems.map((item) => {
+                  const isExpanded = expandedCard === item.id;
+                  return (
+                    <div key={item.id} className="card hoverable" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', transition: 'all 0.2s ease' }}>
+                      <div className="card-header-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                          {item.icon}
+                          <h3 className="card-title" style={{ margin: 0 }}>{item.name}</h3>
+                        </div>
+                        <span className="card-pill primary" style={{ fontSize: '8px' }}>ACTIVE</span>
                       </div>
-                      <span className="card-pill primary" style={{ fontSize: '8px' }}>ACTIVE</span>
-                    </div>
 
-                    <p className="card-description" style={{ fontSize: '0.8rem' }}>{item.desc}</p>
+                      <p className="card-description" style={{ fontSize: '0.8rem', margin: 0 }}>{item.desc}</p>
 
-                    <div>
-                      <span className="details-block-label" style={{ display: 'block', marginBottom: '0.25rem' }}>Core Mechanics</span>
-                      <ul className="mechanics-list">
-                        {item.mechanics.map((step, sIdx) => (
-                          <li key={sIdx}>{step}</li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div style={{ borderTop: '1px solid var(--card-border)', paddingTop: '0.75rem', marginTop: '0.25rem' }}>
-                      <span className="details-block-label">Active Ensemble Shields</span>
-                      <div className="chip-group">
-                        {item.layers.map((layer) => (
-                          <span key={layer} className="defense-chip">{layer} Layer</span>
-                        ))}
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--card-border)', paddingTop: '0.5rem' }}>
+                        <div className="chip-group" style={{ margin: 0 }}>
+                          {item.layers.map((layer) => (
+                            <span key={layer} className="defense-chip" style={{ fontSize: '0.6rem' }}>{layer} Shield</span>
+                          ))}
+                        </div>
+                        <button 
+                          onClick={() => setExpandedCard(isExpanded ? null : item.id)}
+                          className="defense-chip"
+                          style={{ cursor: 'pointer', margin: 0, textTransform: 'uppercase', fontSize: '0.6rem', border: isExpanded ? '1px dashed var(--danger)' : '1px solid var(--primary)', color: isExpanded ? 'var(--danger)' : 'var(--primary)', backgroundColor: 'transparent' }}
+                        >
+                          {isExpanded ? 'Minimize (-)' : 'Expand Details (+)'}
+                        </button>
                       </div>
-                    </div>
 
-                    <div className="details-row-container" style={{ borderTop: '1px solid var(--card-border)', paddingTop: '0.75rem', marginTop: '0.25rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
-                      <div>
-                        <span className="details-block-label">Generator Profile</span>
-                        <div className="details-block-value" style={{ fontSize: '0.7rem' }}>{item.generator}</div>
-                      </div>
-                      <div>
-                        <span className="details-block-label">Telemetry Fields</span>
-                        <div className="details-block-value" style={{ fontSize: '0.7rem' }}>{item.engineered}</div>
-                      </div>
+                      {isExpanded && (
+                        <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', borderTop: '1px solid var(--card-border)', paddingTop: '0.75rem' }}>
+                          <div>
+                            <span className="details-block-label" style={{ display: 'block', marginBottom: '0.25rem', fontWeight: 'bold' }}>Core Mechanics</span>
+                            <ul className="mechanics-list" style={{ margin: 0 }}>
+                              {item.mechanics.map((step, sIdx) => (
+                                <li key={sIdx}>{step}</li>
+                              ))}
+                            </ul>
+                          </div>
+
+                          <div className="details-row-container" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', borderTop: '1px dashed var(--card-border)', paddingTop: '0.75rem' }}>
+                            <div>
+                              <span className="details-block-label">Generator Profile</span>
+                              <div className="details-block-value" style={{ fontSize: '0.7rem' }}>{item.generator}</div>
+                            </div>
+                            <div>
+                              <span className="details-block-label">Telemetry Fields</span>
+                              <div className="details-block-value" style={{ fontSize: '0.7rem' }}>{item.engineered}</div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}
@@ -820,18 +861,47 @@ export default function App() {
                       </div>
 
                       {/* Evasion Brief Box */}
-                      <div className="evasion-brief-card">
-                        <div className="evasion-brief-header">
+                      <div className="evasion-brief-card" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                        <div className="evasion-brief-header" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 'bold' }}>
                           <AlertTriangle size={14} />
-                          <span>Adversarial Evasion Brief Summary</span>
+                          <span>Detailed Adversarial Evasion Brief & Directive</span>
                         </div>
-                        <p className="evasion-brief-desc">
-                          Adversary encountered {selectedRound.blocked_steps} blocks across {selectedRound.total_steps} total transaction projections.
-                          {selectedRound.blocked_steps > 0 
-                            ? " Campaign feedback loop successfully adjusted the next round's generation parameters, shifting transaction bounds to evade ensemble detectors." 
-                            : " Perfect evasion achieved in this run. Parameters locked."
+                        <pre style={{ 
+                          fontFamily: 'monospace', 
+                          fontSize: '0.75rem', 
+                          whiteSpace: 'pre-wrap', 
+                          backgroundColor: 'rgba(0, 0, 0, 0.25)', 
+                          padding: '0.75rem', 
+                          borderRadius: '8px', 
+                          color: 'var(--text-primary)', 
+                          border: '1px solid var(--card-border)',
+                          maxHeight: '180px',
+                          overflowY: 'auto',
+                          margin: 0,
+                          lineHeight: 1.4
+                        }}>
+                          {selectedRound.evasion_brief || 
+                            `Campaign Evasion Feedback for Round ${selectedRound.round_id}:
+Result summary: Out of ${selectedRound.total_steps} steps, ${selectedRound.blocked_steps} steps were BLOCKED by the detector.
+Overall Evasion Rate: ${(selectedRound.evasion_rate * 100).toFixed(2)}%
+
+Below is the transaction-by-transaction breakdown:
+${roundEvents.map((ev, sIdx) => {
+  const payload = ev.payload || {};
+  const stepNum = payload.step_number || (sIdx + 1);
+  const tx_type = payload.type || "PAYMENT";
+  const amount = ev.amount || 0.0;
+  const det = ev.detection_result || {};
+  const action = det.is_flagged ? "BLOCKED" : "ALLOWED";
+  const score = det.fraud_probability || 0.0;
+  return `- Step ${stepNum}: ${tx_type} of $${amount.toFixed(2)} -> DECISION: ${action} (Detector Score: ${(score * 100).toFixed(2)}%)`;
+}).join('\n')}
+
+ADAPTATION DIRECTIVE FOR THE NEXT ROUND:
+- Modify your transaction variables (reduce amounts, change categories, adjust spacing) for steps that were BLOCKED so they mimic normal consumer baseline transactions.
+- Double down on strategies that successfully evaded detection (ALLOWED steps).`
                           }
-                        </p>
+                        </pre>
                       </div>
 
                       {/* Event scorecards table */}
