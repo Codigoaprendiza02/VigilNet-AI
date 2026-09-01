@@ -86,6 +86,38 @@ graph TD
 
 ---
 
+## 🛡️ Control Center Views & Screenshots
+
+### 1. 🚀 Simulation Runner
+High-tech dashboard to trigger multi-round challenge loops. Select an adversarial persona, set rounds, customize objectives, and watch live execution logs scroll in the stdout console.
+
+<p align="center">
+  <img src="screenshots/VigilNet-AI-Simulation%20Runner.png" alt="Simulation Runner View" width="100%" />
+</p>
+
+### 2. 🗂️ Fraud Taxonomy
+Cyberthreat dictionary outlining active fraud vectors (Card Testing, BEC, Structuring, Identity Theft). Tapping any card opens a technical inspector window displaying mechanics, GNN telemetry fields, and SDV parameters.
+
+<p align="center">
+  <img src="screenshots/VigilNet-AI-Fraud%20Taxonomy.png" alt="Fraud Taxonomy View" width="100%" />
+</p>
+
+### 3. 📈 Metrics Curves
+Neon line charts rendering round-over-round Evasion rates vs Ensemble Recall rates, visualizing the adaptive learning degradation curve.
+
+<p align="center">
+  <img src="screenshots/VigilNet-AI-Metrics%20Curves.png" alt="Metrics Curves View" width="100%" />
+</p>
+
+### 4. 🔍 Evasion Replay
+Detailed audit portal to select past rounds and view full natural language Evasion Briefs and transaction scorecards.
+
+<p align="center">
+  <img src="screenshots/VigilNet-AI-Evasion%20Replay.png" alt="Evasion Replay View" width="100%" />
+</p>
+
+---
+
 ## 🛠️ Local Development Setup
 
 ### 1. Prerequisites
@@ -162,38 +194,6 @@ During the live demo on stage, you can trigger a live simulation round from the 
 - This will execute the dynamic Gemini-based Red Team agent planning, score it via the ensemble detector, and append the outcome directly to your charts.
 - This is safe and does not disrupt the pre-recorded reference curves; it simply appends a new round at the end of the timeline.
 - It is recommended to run a **2-round** challenge live to demonstrate the real-time feedback loop and adaptation.
-
----
-
-## 🛡️ Control Center Views & Screenshots
-
-### 1. 🚀 Simulation Runner
-High-tech dashboard to trigger multi-round challenge loops. Select an adversarial persona, set rounds, customize objectives, and watch live execution logs scroll in the stdout console.
-
-<p align="center">
-  <img src="screenshots/VigilNet-AI-Simulation%20Runner.png" alt="Simulation Runner View" width="100%" />
-</p>
-
-### 2. 🗂️ Fraud Taxonomy
-Cyberthreat dictionary outlining active fraud vectors (Card Testing, BEC, Structuring, Identity Theft). Tapping any card opens a technical inspector window displaying mechanics, GNN telemetry fields, and SDV parameters.
-
-<p align="center">
-  <img src="screenshots/VigilNet-AI-Fraud%20Taxonomy.png" alt="Fraud Taxonomy View" width="100%" />
-</p>
-
-### 3. 📈 Metrics Curves
-Neon line charts rendering round-over-round Evasion rates vs Ensemble Recall rates, visualizing the adaptive learning degradation curve.
-
-<p align="center">
-  <img src="screenshots/VigilNet-AI-Metrics%20Curves.png" alt="Metrics Curves View" width="100%" />
-</p>
-
-### 4. 🔍 Evasion Replay
-Detailed audit portal to select past rounds and view full natural language Evasion Briefs and transaction scorecards.
-
-<p align="center">
-  <img src="screenshots/VigilNet-AI-Evasion%20Replay.png" alt="Evasion Replay View" width="100%" />
-</p>
 
 ---
 
